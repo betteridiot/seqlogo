@@ -1,3 +1,15 @@
+"""
+Copyright (c) 2018, Marcus D. Sherman
+
+This code is part of the seqLogo distribution and governed by its
+license.  Please see the LICENSE file that should have been included
+as part of this package.
+
+@author: "Marcus D. Sherman"
+@copyright: "Copyright 2018, University of Michigan, Mills Lab
+@email: "mdsherman<at>betteridiot<dot>tech"
+
+"""
 _AA_LETTERS = "GPAVLIMCFYWHKRQNEDST"
 _EXT_AA_LETTERS = "ACDEFGHIKLMNPQRSTVWYBXZJUO"
 

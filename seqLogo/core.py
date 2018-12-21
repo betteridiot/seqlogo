@@ -1,3 +1,15 @@
+"""
+Copyright (c) 2018, Marcus D. Sherman
+
+This code is part of the seqLogo distribution and governed by its
+license.  Please see the LICENSE file that should have been included
+as part of this package.
+
+@author: "Marcus D. Sherman"
+@copyright: "Copyright 2018, University of Michigan, Mills Lab
+@email: "mdsherman<at>betteridiot<dot>tech"
+
+"""
 import os
 import numpy as np
 import pandas as pd
@@ -28,41 +40,45 @@ def _init_pm(pm_matrix, pm = 'pwm', alphabet = 'DNA'):
                 (default: "DNA")
 
     Returns:
-        
+        pm (`seqLogo.Pwm`): a properly formatted PWM instance object
 
     Raises:
-        
+        FileNotFoundError if `pfm_filename_or_array` is a string, but not a file
+        ValueError if desired alphabet is not supported
+        ValueError if the PM is not well formed
+        ValueError if the probabilities do not add up to 1
+        TypeError if `pfm_filename_or_array` is not a file or array-like structure
     """
     if type(pm_matrix) == str:
         if not os.path.isfile(pm_matrix):
             raise FileNotFoundError(f"{pm_matrix} was not found")
-        if alphabet not in "DNA RNA AA".split():
+        if alphabet not in utils._IDX_LETTERS:
             raise ValueError('alphabet must be DNA, RNA, or AA')
 
-        pwm = pd.read_table(pm_matrix, delim_whitespace = True, header = None)
+        pm = pd.read_table(pm_matrix, delim_whitespace = True, header = None)
 
     elif isinstance(pm_matrix, np.ndarray) or isinstance(pm_matrix, pd.DataFrame):
         pm = pm_matrix
 
     else:
-        raise TypeError('pwm_filename_or_array must be a filename or `np.ndarray`/`pd.DataFrame`')
+        raise TypeError('pfm_filename_or_array` must be a filename or `np.ndarray`/`pd.DataFrame`')
 
     if not pm.shape[1] == 4 and alphabet in ("DNA", "RNA"):
         if pm.shape[0] == 4:
             pwm = pwm.transpose()
         else:
-            raise ValueError(f'{alphabet} alphabet selected, but PWM is not 4 rows')
+            raise ValueError(f'{alphabet} alphabet selected, but PM is not 4 rows')
     if not pm.shape[1] == 20 and alphabet == "AA":
         if pm.shape[0] == 20:
             pm = pwm.transpose()
         else:
-            raise ValueError(f'{alphabet} alphabet selected, but PWM is not 20 rows')
+            raise ValueError(f'{alphabet} alphabet selected, but PM is not 20 rows')
 
-    pm.columns =utils._IDX_LETTERS[alphabet]
+    pm.columns = utils._IDX_LETTERS[alphabet]
 
-    if pm == 'pfm':
+    if pm == 'pwm':
         if not pm.sum(axis = 1).between(1, 1 + 1e-7).all():
-            raise IOError('All or some PWM columns do not add to 1')
+            raise ValueError('All or some PWM columns do not add to 1')
 
     return pm
 
@@ -84,9 +100,6 @@ def pfm2pwm(pfm_filename_or_array, alphabet = "DNA"):
     pwm = pfm.divide(pfm.sum(axis='columns'), axis='index')
     return Pwm(pwm, alphabet)
 
-
-def seqLogo(Pwm, width=6.4, height = 4.8, dpi = 100, format = 'svg'):
-    pass
 
 @partial(np.vectorize, otypes = [np.float64])
 def __proportion(prob):
@@ -186,7 +199,6 @@ class Pwm:
     def __dir__(cls):
         """Just used to clean up the attributes and methods shown when `dir()` is called"""
         return sorted(cls.__all__)
-
 
     @staticmethod
     def _generate_consensus(pwm):

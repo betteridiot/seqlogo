@@ -56,9 +56,8 @@ Minimal Requirements:
 ---------------------
 
 1. ``numpy``
-
--  ``pandas``
--  ``weblogo``
+2. ``pandas``
+3. ``weblogo``
 
 **Note**: it is strongly encouraged that ``jupyter`` is installed as
 well.

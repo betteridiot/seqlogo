@@ -23,7 +23,7 @@ and, subsequently, plot the sequence logos.
 `seqLogo` was written to support BIOINF 529 :Bioinformatics Concepts and Algorithms
 at the University of Michigan in the Department of Computational Medicine & Bioinformatics.
 
-`seqLogo` attempts to blend the user-friendly api of Bioconductor's [`seqLogo`](http://bioconductor.org/packages/release/bioc/html/seqLogo.html) 
+`seqLogo` attempts to blend the user-friendly api of Bioconductor's [seqLogo](http://bioconductor.org/packages/release/bioc/html/seqLogo.html) 
 and the rendering power of the [WebLogo](http://weblogo.threeplusone.com/)Python API.
 
 `seqLogo` can handle numerous alphabets (e.g. DNA, RNA, Amino Acid), all of which

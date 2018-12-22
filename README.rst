@@ -29,7 +29,7 @@ and Algorithms at the University of Michigan in the Department of
 Computational Medicine & Bioinformatics.
 
 ``seqLogo`` attempts to blend the user-friendly api of Bioconductor's
-```seqLogo`` <http://bioconductor.org/packages/release/bioc/html/seqLogo.html>`__
+`seqLogo <http://bioconductor.org/packages/release/bioc/html/seqLogo.html>`__
 and the rendering power of the
 `WebLogo <http://weblogo.threeplusone.com/>`__\ Python API.
 

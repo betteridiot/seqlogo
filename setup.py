@@ -1,40 +1,50 @@
-from setuptools import setup, find_packages
-from codecs import open
-from os import path
+from setuptools import setup
+import os
+import sys
 
 __version__ = '0.0.1'
 
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
-
-# get the dependencies and installs
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    all_reqs = f.read().split('\n')
-
-install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
-dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
+def readme():
+    path = os.path.dirname(__file__) if os.path.dirname(__file__) else '.'
+    with open(path + '/README.rst') as rst:
+        return rst.read()
 
 setup(
     name='seqLogo',
     version=__version__,
     description='Python port of the R Bioconductor `seqLogo` package ',
-    long_description=long_description,
+    long_description=readme(),
     url='https://github.com/betteridiot/seqLogo',
-    download_url='https://github.com/betteridiot/seqLogo/tarball/' + __version__,
-    license='BSD',
+    author='Marcus D. Sherman',
+    author_email='mdsherm@umich.edu',
+    license='BSD 3-Clause',
+    install_requires=[
+        'numpy',
+        'pandas',
+        'weblogo'
+    ]
+    packages=['seqLogo'],
+    package_dir={'seqLogo': './seqLogo'},
+    package_data={'seqLogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},
     classifiers=[
-      'Development Status :: 3 - Alpha',
-      'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3',
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Information Technology',
+        'License :: OSI Approved :: BSD License',
+        'Natural Language :: English',
+        'Operating System :: Unix',
+        'Operating System :: MacOS',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Topic :: Scientific/Engineering',
+        'Topic :: Scientific/Engineering :: Information Analysis'
     ],
-    keywords='',
-    packages=find_packages(exclude=['docs', 'tests*']),
+    keywords='sequence logo seqlogo bioinformatics genomics weblogo',
     include_package_data=True,
-    author='Marcus D Sherman',
-    install_requires=install_requires,
-    dependency_links=dependency_links,
-    author_email='mdsherman@betteridiot.tech'
+    zip_safe=False
 )
+

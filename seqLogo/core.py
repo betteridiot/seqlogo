@@ -13,7 +13,6 @@ as part of this package.
 import os
 import numpy as np
 import pandas as pd
-import weblogolib as wl
 from functools import partial
 from seqLogo import utils
 
@@ -58,9 +57,10 @@ def _init_pm(pm_matrix, pm_type = 'pwm', alphabet = 'DNA'):
 
         pm = pd.read_table(pm_matrix, delim_whitespace = True, header = None)
 
-    elif isinstance(pm_matrix, (np.ndarray, pd.DataFrame)):
+    elif isinstance(pm_matrix, np.ndarray):
+        pm = pd.DataFrame(data = pm_matrix)
+    elif isinstance(pm_matrix, pd.DataFrame):
         pm = pm_matrix
-
     elif isinstance(pm_matrix, Pwm):
         return pm_matrix
     else:
@@ -199,8 +199,8 @@ class Pwm:
         if alphabet is None:
             alphabet = self.alphabet
         self._pwm = _init_pm(pwm, alphabet)
-        self._consensus = self._generate_consensus(pwm)
-        self._ic = self._generate_ic(pwm)
+        self._consensus = self._generate_consensus(self.pwm)
+        self._ic = self._generate_ic(self.pwm)
         self._width = pwm.shape[0]
         self._alphabet = utils._IDX_LETTERS[alphabet]
         self._alphabet_type = alphabet

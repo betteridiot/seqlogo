@@ -205,8 +205,8 @@ Contributing
 Please see our contribution guidelines
 `here <https://github.com/betteridiot/seqLogo/blob/master/CONTRIBUTING.md>`__
 
-References
-----------
+Acknowledgments/Citations
+-------------------------
 
 1. Bembom O (2018). seqLogo: Sequence logos for DNA sequence alignments.
    R package version 1.48.0.

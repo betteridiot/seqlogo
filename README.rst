@@ -1,5 +1,11 @@
-seqLogo: Python port of Bioconductor's ``seqLogo`` served by `WebLogo <http://weblogo.threeplusone.com/>`__
-===========================================================================================================
+|PyPI version| |License|
+
+seqLogo
+=======
+
+Python port of Bioconductor's
+`seqLogo <http://bioconductor.org/packages/release/bioc/html/seqLogo.html>`__
+served by `WebLogo <http://weblogo.threeplusone.com/>`__
 
 Overview
 --------
@@ -20,27 +26,37 @@ seen at that given position. This is often generated in a frequentist
 fashion. If a pipeline tallies all observed letters at each position,
 this is called a Position Frequency Matrix (PFM).
 
-``seqLogo`` can use both PWMs and PFMs as entry points for analysis
-(from a file or in array formats) and, subsequently, plot the sequence
-logos.
+-  ``seqLogo`` can use both PWMs and PFMs as entry points for analysis
+   (from a file or in array formats) and, subsequently, plot the
+   sequence logos.
 
-``seqLogo`` was written to support BIOINF 529 :Bioinformatics Concepts
-and Algorithms at the University of Michigan in the Department of
-Computational Medicine & Bioinformatics.
+-  ``seqLogo`` was written to support BIOINF 529 :Bioinformatics
+   Concepts and Algorithms at the University of Michigan in the
+   Department of Computational Medicine & Bioinformatics.
 
-``seqLogo`` attempts to blend the user-friendly api of Bioconductor's
-`seqLogo <http://bioconductor.org/packages/release/bioc/html/seqLogo.html>`__
-and the rendering power of the
-`WebLogo <http://weblogo.threeplusone.com/>`__\ Python API.
+-  ``seqLogo`` attempts to blend the user-friendly api of Bioconductor's
+   `seqLogo <http://bioconductor.org/packages/release/bioc/html/seqLogo.html>`__
+   and the rendering power of the
+   `WebLogo <http://weblogo.threeplusone.com/>`__\ Python API.
 
-``seqLogo`` can handle numerous alphabets (e.g. DNA, RNA, Amino Acid),
-all of which can be extended, reduced, or ambiguous.
+-  ``seqLogo`` can handle numerous alphabets (e.g. DNA, RNA, Amino
+   Acid), all of which can be extended, reduced, or ambiguous.
 
-``seqLogo`` can also render sequence logos in a number of formats: \*
-svg (default) \* eps \* pdf \* jpeg \* bmp \* png
+-  ``seqLogo`` can also render sequence logos in a number of formats:
 
-All plots can be rendered in 4 different sizes: \* small: 3.54" wide \*
-medium: 5" wide \* large: 7.25" wide \* xlarge: 10.25" wide
+   -  svg (default)
+   -  eps
+   -  pdf
+   -  jpeg
+   -  bmp
+   -  png
+
+-  All plots can be rendered in 4 different sizes:
+
+   -  small: 3.54" wide
+   -  medium: 5" wide
+   -  large: 7.25" wide
+   -  xlarge: 10.25" wide
 
 Notes:
 ~~~~~~
@@ -49,11 +65,13 @@ Notes:
    environment (for inline plotting purposes).
 -  Initially written for Python 3.7. No other runtime has been tested.
 
-Installation / Usage
---------------------
+--------------
+
+Installation
+------------
 
 Minimal Requirements:
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 1. ``numpy``
 2. ``pandas``
@@ -63,7 +81,7 @@ Minimal Requirements:
 well.
 
 ``conda`` environment:
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 To produce the ideal virtual environment that will run ``seqLogo`` on a
 ``conda``-based build, clone the repo or download the environment.yml
@@ -89,11 +107,13 @@ Or clone the repo:
     $ git clone https://github.com/betteridiot/seqLogo.git
     $ python setup.py install
 
+--------------
+
 Quickstart
 ----------
 
 Importing
----------
+~~~~~~~~~
 
 .. code:: python
 
@@ -103,7 +123,7 @@ Importing
     import seqLogo
 
 Generate some PWM data (without frequency data)
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For many demonstrations that speak to PWMs, they are often started with
 PWM data. Many packages preclude sequence logo generation from this
@@ -131,7 +151,7 @@ This is **only** for ``weblogolib`` comparability.
     5  0.498510  0.079138  0.182004  0.240349
 
 Generate some frequency data and convert to PWM
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sometimes the user has frequency data instead of PWM. To construct a
 ``Pwm`` instance that automatically computes Information Content and PWM
@@ -160,7 +180,7 @@ values, the user can use the ``seqLogo.pfm2pwm()`` function.
     7  0.416667  0.166667  0.354167  0.062500
 
 Plot the sequence logo with information content scaling
--------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
@@ -175,12 +195,11 @@ Plot the sequence logo with information content scaling
 
 The above code will produce:
 
-.. figure:: ./docs/figures/ic_scale.svg
-   :alt: ic\_scale
+.. figure:: https://github.com/betteridiot/seqLogo/blob/master/docs/figures/ic_scale.svg
+   :alt: 
 
-   ic\_scale
 Plot the sequence logo with no information content scaling
-----------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
@@ -195,21 +214,28 @@ Plot the sequence logo with no information content scaling
 
 The above code will produce:
 
-.. figure:: ./docs/figures/no_ic_scale.svg
-   :alt: no\_ic\_scale
+.. figure:: https://github.com/betteridiot/seqLogo/blob/master/docs/figures/no_ic_scale.svg
+   :alt: 
 
-   no\_ic\_scale
+--------------
+
 Contributing
 ------------
 
 Please see our contribution guidelines
 `here <https://github.com/betteridiot/seqLogo/blob/master/CONTRIBUTING.md>`__
 
-Acknowledgments/Citations
--------------------------
+--------------
+
+Acknowledgments
+---------------
 
 1. Bembom O (2018). seqLogo: Sequence logos for DNA sequence alignments.
    R package version 1.48.0.
 2. Crooks GE, Hon G, Chandonia JM, Brenner SE WebLogo: A sequence logo
    generator, Genome Research, 14:1188-1190, (2004).
 
+.. |PyPI version| image:: https://badge.fury.io/py/seqLogo.svg
+   :target: https://pypi.org/project/seqLogo/
+.. |License| image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
+   :target: https://github.com/betteridiot/seqLogo/blob/master/LICENSE

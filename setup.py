@@ -2,18 +2,19 @@ from setuptools import setup
 import os
 import sys
 
-__version__ = '0.0.1'
+__version__ = '0.0.3'
 
-def readme():
-    path = os.path.dirname(__file__) if os.path.dirname(__file__) else '.'
-    with open(path + '/README.rst') as rst:
-        return rst.read()
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='seqLogo',
     version=__version__,
     description='Python port of the R Bioconductor `seqLogo` package ',
-    long_description=readme(),
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/betteridiot/seqLogo',
     author='Marcus D. Sherman',
     author_email='mdsherm@umich.edu',
@@ -22,7 +23,7 @@ setup(
         'numpy',
         'pandas',
         'weblogo'
-    ]
+    ],
     packages=['seqLogo'],
     package_dir={'seqLogo': './seqLogo'},
     package_data={'seqLogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},

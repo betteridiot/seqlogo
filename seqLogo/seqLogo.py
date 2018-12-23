@@ -46,12 +46,12 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
         if color_scheme is None:
             color_scheme = 'classic'
         if color_scheme not in utils.NA_COLORSCHEMES:
-            raise ValueError(f'{color_scheme} color_scheme selected is not an allowed nucleic acid color scheme')
+            raise ValueError('{} color_scheme selected is not an allowed nucleic acid color scheme'.format(color_scheme))
     if pwm.alphabet_type in utils.AA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'hydrophobicity'
         if color_scheme not in utils.AA_COLORSCHEMES:
-            raise ValueError(f'{color_scheme} color_scheme selected is not an allowed amino acid color scheme')
+            raise ValueError('{} color_scheme selected is not an allowed amino acid color scheme'.format(color_scheme))
 
     color_scheme = wl.std_color_schemes[color_scheme]
 
@@ -76,7 +76,7 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
 
     # Create the file if the user supplied an output_name
     if output_name:
-        out_file = open(f'{output_name}.{format}', 'wb')
+        out_file = open('{}.{}'.format(output_name, format), 'wb')
         out_file.write(out)
         out_file.close()
 
@@ -88,7 +88,7 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
             elif format in ('png', 'jpeg', 'svg'):
                 ipd.display(ipd.Image(out))
             else:
-                raise ValueError(f'{format} format not supported for plotting in console')
+                raise ValueError('{} format not supported for plotting in console'.format(format))
             if output_name:
                 with open(output_name, 'wb') as out_file:
                     out_file.write(out)
@@ -96,6 +96,6 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
         if output_name is None:
             raise ValueError('If not in an IPython/Jupyter console and no output_name is given, nothing will be rendered')
         else:
-            with  open(f'{output_name}.{format}', 'wb') as out_file:
+            with  open('{}.{}'.format(output_name, format), 'wb') as out_file:
                 out_file.write(out)
 

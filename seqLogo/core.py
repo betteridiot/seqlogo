@@ -70,12 +70,12 @@ def _init_pm(pm_matrix, pm_type = 'pwm', alphabet = 'DNA'):
         if pm.shape[0] == 4:
             pwm = pwm.transpose()
         else:
-            raise ValueError(f'{alphabet} alphabet selected, but PM is not 4 rows')
+            raise ValueError('{} alphabet selected, but PM is not 4 rows'.format(alphabet))
     if not pm.shape[1] == 20 and alphabet == "AA":
         if pm.shape[0] == 20:
             pm = pwm.transpose()
         else:
-            raise ValueError(f'{alphabet} alphabet selected, but PM is not 20 rows')
+            raise ValueError('{} alphabet selected, but PM is not 20 rows'.format(alphabet))
 
     pm.columns = list(utils._IDX_LETTERS[alphabet])
 

@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 import sys
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
@@ -37,6 +37,8 @@ setup(
         'Natural Language :: English',
         'Operating System :: Unix',
         'Operating System :: MacOS',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',

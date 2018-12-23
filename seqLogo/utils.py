@@ -60,7 +60,7 @@ def gen_hydrophobicity_map():
         elif letter in "YVMCLFIW":
             hydro_map[letter] = 'hydrophobic'
         else:
-            raise ValueError('{} is not a canonical amino acid').format(letter))
+            raise ValueError('{} is not a canonical amino acid'.format(letter))
     return hydro_map
 
 

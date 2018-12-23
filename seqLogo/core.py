@@ -51,7 +51,7 @@ def _init_pm(pm_matrix, pm_type = 'pwm', alphabet = 'DNA'):
     """
     if type(pm_matrix) == str:
         if not os.path.isfile(pm_matrix):
-            raise FileNotFoundError(f"{pm_matrix} was not found")
+            raise FileNotFoundError('{} was not found'.format(pm_matrix))
         if alphabet not in utils._IDX_LETTERS:
             raise ValueError('alphabet must be DNA, RNA, or AA')
 

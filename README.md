@@ -13,14 +13,22 @@ different sites along the genome or within a protein sequence. One aspect of thi
 analysis involves creating a Position Weight Matrix (PWM). The formal format for
 a PWM file can be found [here](http://bioinformatics.intec.ugent.be/MotifSuite/pwmformat.php).
 
-In short, a PWM file has `M` number of rows by `N` number of columns, where the
-number of rows is the number of positions within the target sequence, and the number
-of columns is the number of possible letters that can be found in the sequence.
+---
+#### Specification
+A PWM file can be just a plain text, whitespace delimited matrix, such that the number of columns
+matches the number of letters in your desired alphabet and the number of rows is the number of positions
+in your sequence. Any comment lines that start with `#` will be skipped.
+
+*Note*: [TRANSFAC matrix](http://meme-suite.org/doc/transfac-format.html) and [MEME Motif](http://meme-suite.org/doc/meme-format.html) formats are not directly supported.
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\large&space;\mathit{PWM}_{m,n}&space;=&space;\begin{pmatrix}&space;a_{1,1}&space;&&space;a_{1,2}&space;&&space;\cdots&space;&&space;a_{1,n}&space;\\&space;a_{2,1}&space;&&space;a_{2,2}&space;&&space;\cdots&space;&&space;a_{2,n}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots&space;\\&space;a_{m,1}&space;&&space;a_{m,2}&space;&&space;\cdots&space;&&space;a_{m,n}&space;\end{pmatrix}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\large&space;\mathit{PWM}_{m,n}&space;=&space;\begin{pmatrix}&space;a_{1,1}&space;&&space;a_{1,2}&space;&&space;\cdots&space;&&space;a_{1,n}&space;\\&space;a_{2,1}&space;&&space;a_{2,2}&space;&&space;\cdots&space;&&space;a_{2,n}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots&space;\\&space;a_{m,1}&space;&&space;a_{m,2}&space;&&space;\cdots&space;&&space;a_{m,n}&space;\end{pmatrix}" title="\large \mathit{PWM}_{m,n} = \begin{pmatrix} a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\ a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m,1} & a_{m,2} & \cdots & a_{m,n} \end{pmatrix}" /></a>
 
 Each item within the PWM is the probability of that given letter being seen at that
 given position. This is often generated in a frequentist fashion. If a pipeline
 tallies all observed letters at each position, this is called a Position Frequency Matrix (PFM).
 
+---
+#### Features
 * `seqLogo` can use both PWMs and PFMs as entry points for analysis (from a file or in array formats)
 and, subsequently, plot the sequence logos.
 
@@ -30,29 +38,43 @@ at the University of Michigan in the Department of Computational Medicine & Bioi
 * `seqLogo` attempts to blend the user-friendly api of Bioconductor's [seqLogo](http://bioconductor.org/packages/release/bioc/html/seqLogo.html) 
 and the rendering power of the [WebLogo](http://weblogo.threeplusone.com/)Python API.
 
-* `seqLogo` can handle numerous alphabets (e.g. DNA, RNA, Amino Acid), all of which
-can be extended, reduced, or ambiguous.
+* `seqLogo` supports the following alphabets:
 
+    | Alphabet name |  Alphabet Letters |
+    | :--- |  :--- |
+    | **`"DNA"`** | `"ACGT"` |
+    | `"reduced DNA"` | `"ACGTN-"` |
+    | `"ambig DNA"` | `"ACGTRYSWKMBDHVN-"` |
+    | **`"RNA"`** | `"ACGU"` |
+    | `"reduced RNA"` | `"ACGUN-"` |
+    | `"ambig RNA"` | `"ACGURYSWKMBDHVN-"` |
+    | **`"AA"`** | `"ACDEFGHIKLMNPQRSTVWY"` |
+    | `"reduced AA"` | `"ACDEFGHIKLMNPQRSTVWYX*-"` |
+    | `"ambig AA"` | `"ACDEFGHIKLMNOPQRSTUVWYBJZX*-"` |
+    (**Bolded** alphabet names are the most commonly used)
 * `seqLogo` can also render sequence logos in a number of formats:
-    * svg (default)
-    * eps
-    * pdf
-    * jpeg
-    * bmp
-    * png
+    * `"svg"` (default)
+    * `"eps"`
+    * `"pdf"`
+    * `"jpeg"`
+    * `"png"`
 
 * All plots can be rendered in 4 different sizes:
-    * small: 3.54" wide
-    * medium: 5" wide
-    * large: 7.25" wide
-    * xlarge: 10.25" wide
+    * `"small"`: 3.54" wide
+    * `"medium"`: 5" wide
+    * `"large"`: 7.25" wide
+    * `"xlarge"`: 10.25" wide
 
-### Notes:
+*Note*: all sizes taken from [this](http://www.sciencemag.org/sites/default/files/Figure_prep_guide.pdf) publication
+guide from Science Magazine.
+
+---
+#### Recommended settings:
 * For best results, implement `seqLogo` within a IPython/Jupyter environment (for inline plotting purposes).
-* Initially written for Python 3.7. No other runtime has been tested.
+* Initially written for Python 3.7, but has shown to work in versions 3.5+ (**Python 2.7 is not supported**)
 
 ***
-## Installation
+## Setup
 
 ### Minimal Requirements:
 1. `numpy`
@@ -61,7 +83,8 @@ can be extended, reduced, or ambiguous.
 
 **Note**: it is strongly encouraged that `jupyter` is installed as well.
 
-### `conda` environment:
+---
+#### `conda` environment:
 
 To produce the ideal virtual environment that will run `seqLogo` on a `conda`-based
 build, clone the repo or download the environment.yml within the repo. Then run the following
@@ -73,6 +96,9 @@ $ conda env create -f environment.yml
 
 ```
 
+---
+#### Installation
+
 To install using pip:
 
 ```bash
@@ -80,12 +106,11 @@ To install using pip:
 $ pip install seqLogo
 
 ```
-Or clone the repo:
+Or install from GitHub directly
 
 ```bash
 
-$ git clone https://github.com/betteridiot/seqLogo.git
-$ python setup.py install
+$ git install git+https://github.com/betteridiot/seqLogo.git#egg=seqLogo
 
 ```
 
@@ -98,7 +123,7 @@ $ python setup.py install
 
 import numpy as np
 import pandas as pd
-import seqLogo
+import seqLogo # mind the capital 'L'
 
 ```
 

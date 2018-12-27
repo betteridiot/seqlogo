@@ -1,13 +1,32 @@
+from setuptools.command.test import test as TestCommand
 from setuptools import setup
 import os
 import sys
 
-__version__ = '0.0.6'
+__version__ = '0.1.0'
 
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
+
+
+class PyTest(TestCommand):
+    user_args = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = []
+
+    def run_tests(self):
+        import pytest
+        errno = pytest.main(self.pytest_args)
+        if errno:
+            sys.exit(errno)
+        else:
+            errno = pytest.main(['-Wignore'])
+            sys.exit(errno)
+
 
 setup(
     name='seqLogo',
@@ -24,8 +43,10 @@ setup(
         'pandas',
         'weblogo'
     ],
-    packages=['seqLogo'],
-    package_dir={'seqLogo': './seqLogo'},
+    tests_require=['pytest'],
+    cmdclass = {'test' : PyTest},
+    packages=['seqLogo', 'tests'],
+    package_dir={'seqLogo': './seqLogo', 'tests': './tests'},
     package_data={'seqLogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},
     classifiers=[
         'Development Status :: 4 - Beta',

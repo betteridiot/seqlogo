@@ -13,7 +13,7 @@ _sizes = {
 
 
 def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
-            format = 'svg', output_name = None, **kwargs):
+            format = 'svg', filename = None, **kwargs):
     """The plotting method of the `seqLogo` distribution.
 
     Given an `M x N` PWM matrix, where `M` is the number of positions and `N`
@@ -29,7 +29,7 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
         ic_scale (bool): whether or not to scale the column heights (default: True)
         size (str): small (3.54 in), medium (5 in), large (7.25 in), xlarge (10.25) (default: 'medium')
         format (str): desired matplotlib supported output format Options are 'eps', 'pdf', 'png', 'jpeg', and 'svg' (default: "svg")
-        output_name (None | str): Name of the file to save the figure. If `None`:
+        filename (None | str): Name of the file to save the figure. If `None`:
             the figure will not be saved. (default: None)
         color_scheme (str): the color scheme to use for weblogo:
             'auto': None
@@ -42,12 +42,12 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
         **kwargs: all additional keyword arguments found at http://weblogo.threeplusone.com/manual.html 
     """
     # Ensure color scheme matches the alphabet
-    if pwm.alphabet_type in utils.NA_ALPHABETS:
+    if pwm.alphabet in utils.NA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'classic'
         if color_scheme not in utils.NA_COLORSCHEMES:
             raise ValueError('{} color_scheme selected is not an allowed nucleic acid color scheme'.format(color_scheme))
-    if pwm.alphabet_type in utils.AA_ALPHABETS:
+    elif pwm.alphabet in utils.AA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'hydrophobicity'
         if color_scheme not in utils.AA_COLORSCHEMES:
@@ -74,9 +74,9 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
 
     out = out_format(pwm, logo_format)
 
-    # Create the file if the user supplied an output_name
-    if output_name:
-        out_file = open('{}.{}'.format(output_name, format), 'wb')
+    # Create the file if the user supplied an filename
+    if filename:
+        out_file = open('{}'.format(filename), 'wb')
         out_file.write(out)
         out_file.close()
 
@@ -89,13 +89,13 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
                 ipd.display(ipd.Image(out))
             else:
                 raise ValueError('{} format not supported for plotting in console'.format(format))
-            if output_name:
-                with open(output_name, 'wb') as out_file:
+            if filename:
+                with open(filename, 'wb') as out_file:
                     out_file.write(out)
     except NameError:
-        if output_name is None:
-            raise ValueError('If not in an IPython/Jupyter console and no output_name is given, nothing will be rendered')
+        if filename is None:
+            raise ValueError('If not in an IPython/Jupyter console and no filename is given, nothing will be rendered')
         else:
-            with  open('{}.{}'.format(output_name, format), 'wb') as out_file:
+            with  open('{}'.format(filename), 'wb') as out_file:
                 out_file.write(out)
 

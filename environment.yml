@@ -133,5 +133,5 @@ dependencies:
     - jinja2-time==0.2.0
     - poyo==0.4.2
     - whichcraft==0.5.2
-prefix: /root/miniconda3/envs/seqLogo
+prefix: /root/miniconda3/envs/seqlogo
 

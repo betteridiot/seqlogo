@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import weblogolib as wl
-from seqLogo import utils
+from seqlogo import utils
 
 
 _sizes = {
@@ -12,9 +12,9 @@ _sizes = {
 }
 
 
-def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
+def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
             format = 'svg', filename = None, **kwargs):
-    """The plotting method of the `seqLogo` distribution.
+    """The plotting method of the `seqlogo` distribution.
 
     Given an `M x N` PWM matrix, where `M` is the number of positions and `N`
     is the number of letters, calculate and render a WebLogo-like motif plot.
@@ -25,7 +25,7 @@ def seqLogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
     reflect "bits"
 
     Args:
-        pwm (`seqLogo.Pwm`): a pre-formatted PWM instance
+        pwm (`seqlogo.Pwm`): a pre-formatted PWM instance
         ic_scale (bool): whether or not to scale the column heights (default: True)
         size (str): small (3.54 in), medium (5 in), large (7.25 in), xlarge (10.25) (default: 'medium')
         format (str): desired matplotlib supported output format Options are 'eps', 'pdf', 'png', 'jpeg', and 'svg' (default: "svg")

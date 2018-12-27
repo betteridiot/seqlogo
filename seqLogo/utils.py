@@ -1,7 +1,7 @@
 """
 Copyright (c) 2018, Marcus D. Sherman
 
-This code is part of the seqLogo distribution and governed by its
+This code is part of the seqlogo distribution and governed by its
 license.  Please see the LICENSE file that should have been included
 as part of this package.
 

@@ -1,9 +1,9 @@
 
-[![PyPI version](https://badge.fury.io/py/seqLogo.svg)](https://pypi.org/project/seqLogo/)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/betteridiot/seqLogo/blob/master/LICENSE)
+[![PyPI version](https://badge.fury.io/py/seqlogo.svg)](https://pypi.org/project/seqlogo/)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/betteridiot/seqlogo/blob/master/LICENSE)
 </br>
 
-# seqLogo
+# seqlogo
 Python port of Bioconductor's [seqLogo](http://bioconductor.org/packages/release/bioc/html/seqLogo.html) served by [WebLogo](http://weblogo.threeplusone.com/)
 
 ## Overview
@@ -29,16 +29,16 @@ tallies all observed letters at each position, this is called a Position Frequen
 
 ---
 #### Features
-* `seqLogo` can use both PWMs and PFMs as entry points for analysis (from a file or in array formats)
+* `seqlogo` can use both PWMs and PFMs as entry points for analysis (from a file or in array formats)
 and, subsequently, plot the sequence logos.
 
-* `seqLogo` was written to support BIOINF 529 :Bioinformatics Concepts and Algorithms
+* `seqlogo` was written to support BIOINF 529 :Bioinformatics Concepts and Algorithms
 at the University of Michigan in the Department of Computational Medicine & Bioinformatics.
 
-* `seqLogo` attempts to blend the user-friendly api of Bioconductor's [seqLogo](http://bioconductor.org/packages/release/bioc/html/seqLogo.html) 
+* `seqlogo` attempts to blend the user-friendly api of Bioconductor's [seqLogo](http://bioconductor.org/packages/release/bioc/html/seqLogo.html) 
 and the rendering power of the [WebLogo](http://weblogo.threeplusone.com/)Python API.
 
-* `seqLogo` supports the following alphabets:
+* `seqlogo` supports the following alphabets:
 
     | Alphabet name |  Alphabet Letters |
     | :--- |  :--- |
@@ -52,7 +52,7 @@ and the rendering power of the [WebLogo](http://weblogo.threeplusone.com/)Python
     | `"reduced AA"` | `"ACDEFGHIKLMNPQRSTVWYX*-"` |
     | `"ambig AA"` | `"ACDEFGHIKLMNOPQRSTUVWYBJZX*-"` |
     (**Bolded** alphabet names are the most commonly used)
-* `seqLogo` can also render sequence logos in a number of formats:
+* `seqlogo` can also render sequence logos in a number of formats:
     * `"svg"` (default)
     * `"eps"`
     * `"pdf"`
@@ -70,7 +70,7 @@ guide from Science Magazine.
 
 ---
 #### Recommended settings:
-* For best results, implement `seqLogo` within a IPython/Jupyter environment (for inline plotting purposes).
+* For best results, implement `seqlogo` within a IPython/Jupyter environment (for inline plotting purposes).
 * Initially written for Python 3.7, but has shown to work in versions 3.5+ (**Python 2.7 is not supported**)
 
 ***
@@ -86,7 +86,7 @@ guide from Science Magazine.
 ---
 #### `conda` environment:
 
-To produce the ideal virtual environment that will run `seqLogo` on a `conda`-based
+To produce the ideal virtual environment that will run `seqlogo` on a `conda`-based
 build, clone the repo or download the environment.yml within the repo. Then run the following
 command:
 
@@ -103,14 +103,14 @@ To install using pip:
 
 ```bash
 
-$ pip install seqLogo
+$ pip install seqlogo
 
 ```
 Or install from GitHub directly
 
 ```bash
 
-$ git install git+https://github.com/betteridiot/seqLogo.git#egg=seqLogo
+$ git install git+https://github.com/betteridiot/seqlogo.git#egg=seqlogo
 
 ```
 
@@ -123,7 +123,7 @@ $ git install git+https://github.com/betteridiot/seqLogo.git#egg=seqLogo
 
 import numpy as np
 import pandas as pd
-import seqLogo # mind the capital 'L'
+import seqlogo # mind the capital 'L'
 
 ```
 
@@ -131,8 +131,8 @@ import seqLogo # mind the capital 'L'
 
 For many demonstrations that speak to PWMs, they are often started with PWM data.
 Many packages preclude sequence logo generation from this entry point. However,
-`seqLogo` can handle it just fine. One point to make though is that if no count 
-data is provided, `seqLogo` just generates *pseudo-count* data by multiplying the
+`seqlogo` can handle it just fine. One point to make though is that if no count 
+data is provided, `seqlogo` just generates *pseudo-count* data by multiplying the
 probabilities by 100. This is **only** for `weblogolib` comparability.
 
 ```python
@@ -142,7 +142,7 @@ probabilities by 100. This is **only** for `weblogolib` comparability.
 
 # Making a fake PWM
 >>> random_pwm = np.random.dirichlet(np.ones(4), size=6)
->>> pwm = seqLogo.Pwm(random_pwm)
+>>> pwm = seqlogo.Pwm(random_pwm)
 >>> pwm
           A         C         G         T
 0  0.082197  0.527252  0.230641  0.159911
@@ -157,7 +157,7 @@ probabilities by 100. This is **only** for `weblogolib` comparability.
 ### Generate some frequency data and convert to PWM
 Sometimes the user has frequency data instead of PWM. To construct a `Pwm` instance
 that automatically computes Information Content and PWM values, the user can use
-the `seqLogo.pfm2pwm()` function.
+the `seqlogo.pfm2pwm()` function.
 
 ```python
 
@@ -168,7 +168,7 @@ the `seqLogo.pfm2pwm()` function.
 >>> pfm = pd.DataFrame(np.random.randint(0, 36, size=(8, 4)))
 
 # Convert to Position Weight Matrix (PWM)
->>> pwm = seqLogo.pfm2pwm(pfm)
+>>> pwm = seqlogo.pfm2pwm(pfm)
 >>> pwm
           A         C         G         T
 0  0.405797  0.202899  0.101449  0.289855
@@ -191,14 +191,14 @@ the `seqLogo.pfm2pwm()` function.
 
 # Making a fake PWM
 >>> random_pwm = np.random.dirichlet(np.ones(4), size=6)
->>> pwm = seqLogo.Pwm(random_pwm)
->>> seqLogo.seqLogo(pwm, ic_scale = False, format = 'svg', size = 'medium')
+>>> pwm = seqlogo.Pwm(random_pwm)
+>>> seqlogo.seqlogo(pwm, ic_scale = False, format = 'svg', size = 'medium')
 
 ```
 
 The above code will produce:
 
-![](https://github.com/betteridiot/seqLogo/blob/master/docs/figures/ic_scale.svg)
+![](https://github.com/betteridiot/seqlogo/blob/master/docs/figures/ic_scale.svg)
 
 
 ### Plot the sequence logo with no information content scaling
@@ -210,24 +210,24 @@ The above code will produce:
 
 # Making a fake PWM
 >>> random_pwm = np.random.dirichlet(np.ones(4), size=6)
->>> pwm = seqLogo.Pwm(random_pwm)
->>> seqLogo.seqLogo(pwm, ic_scale = False, format = 'svg', size = 'medium')
+>>> pwm = seqlogo.Pwm(random_pwm)
+>>> seqlogo.seqlogo(pwm, ic_scale = False, format = 'svg', size = 'medium')
 
 ```
 
 The above code will produce:
 
-![](https://github.com/betteridiot/seqLogo/blob/master/docs/figures/no_ic_scale.svg)
+![](https://github.com/betteridiot/seqlogo/blob/master/docs/figures/no_ic_scale.svg)
 
 
 ***
 ## Contributing
 
-Please see our contribution guidelines [here](https://github.com/betteridiot/seqLogo/blob/master/CONTRIBUTING.md)
+Please see our contribution guidelines [here](https://github.com/betteridiot/seqlogo/blob/master/CONTRIBUTING.md)
 
 ***
 ## Acknowledgments
 
-1. Bembom O (2018). seqLogo: Sequence logos for DNA sequence alignments. R package version 1.48.0.
+1. Bembom O (2018). seqlogo: Sequence logos for DNA sequence alignments. R package version 1.48.0.
 2. Crooks GE, Hon G, Chandonia JM, Brenner SE WebLogo: A sequence logo generator,
 Genome Research, 14:1188-1190, (2004).

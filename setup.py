@@ -3,7 +3,7 @@ from setuptools import setup
 import os
 import sys
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
@@ -29,12 +29,12 @@ class PyTest(TestCommand):
 
 
 setup(
-    name='seqLogo',
+    name='seqlogo',
     version=__version__,
-    description='Python port of the R Bioconductor `seqLogo` package ',
+    description='Python port of the R Bioconductor `seqlogo` package ',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/betteridiot/seqLogo',
+    url='https://github.com/betteridiot/seqlogo',
     author='Marcus D. Sherman',
     author_email='mdsherm@umich.edu',
     license='BSD 3-Clause',
@@ -45,9 +45,9 @@ setup(
     ],
     tests_require=['pytest'],
     cmdclass = {'test' : PyTest},
-    packages=['seqLogo', 'tests'],
-    package_dir={'seqLogo': './seqLogo', 'tests': './tests'},
-    package_data={'seqLogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},
+    packages=['seqlogo'],
+    package_dir={'seqlogo': './seqlogo'},
+    package_data={'seqlogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

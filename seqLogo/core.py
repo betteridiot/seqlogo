@@ -1,7 +1,7 @@
 """
 Copyright (c) 2018, Marcus D. Sherman
 
-This code is part of the seqLogo distribution and governed by its
+This code is part of the seqlogo distribution and governed by its
 license.  Please see the LICENSE file that should have been included
 as part of this package.
 
@@ -14,7 +14,7 @@ import os
 import numpy as np
 import pandas as pd
 from functools import partial
-from seqLogo import utils
+from seqlogo import utils
 
 
 def _init_pm(pm_matrix, pm_type = 'pwm', alphabet = 'DNA'):
@@ -41,7 +41,7 @@ def _init_pm(pm_matrix, pm_type = 'pwm', alphabet = 'DNA'):
                 (default: "DNA")
 
     Returns:
-        pm (`seqLogo.Pwm`): a properly formatted PWM instance object
+        pm (`seqlogo.Pwm`): a properly formatted PWM instance object
 
     Raises:
         FileNotFoundError if `pfm_filename_or_array` is a string, but not a file

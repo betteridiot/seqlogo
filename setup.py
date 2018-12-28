@@ -3,7 +3,7 @@ from setuptools import setup
 import os
 import sys
 
-__version__ = '0.1.3'
+__version__ = '0.1.6'
 
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
@@ -36,7 +36,7 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/betteridiot/seqlogo',
     author='Marcus D. Sherman',
-    author_email='mdsherm@umich.edu',
+    author_email='mdsherman@betteridiot.tech',
     license='BSD 3-Clause',
     install_requires=[
         'numpy',
@@ -45,7 +45,7 @@ setup(
     ],
     tests_require=['pytest'],
     cmdclass = {'test' : PyTest},
-    packages=['seqlogo'],
+    packages=['seqlogo', 'seqlogo.tests'],
     package_dir={'seqlogo': './seqlogo'},
     package_data={'seqlogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},
     classifiers=[

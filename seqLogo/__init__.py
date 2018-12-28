@@ -28,7 +28,7 @@ license.  Please see the LICENSE file that should have been included
 as part of this package.
 
 """
-from seqLogo.core import pfm2pwm, Pwm
-from seqLogo.seqLogo import *
+from seqlogo.core import pfm2pwm, Pwm
+from seqlogo.seqlogo import *
 
-__version__ = '0.0.1'
+__version__ = '0.1.2'

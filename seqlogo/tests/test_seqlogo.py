@@ -20,5 +20,5 @@ def test_seqlogo_plot(tmpdir):
     np.random.seed(42)
     pfm = pd.DataFrame(np.random.randint(0, 36, size=(8, 4)))
     pwm = seqlogo.pfm2pwm(pfm)
-    seqlogo.seqlogo(pwm, filename = file.strpath)
+    seqlogo.seqlogo(pwm, format = 'eps', filename = file.strpath)
     assert file.read()

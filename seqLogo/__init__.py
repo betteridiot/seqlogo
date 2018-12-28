@@ -31,4 +31,4 @@ as part of this package.
 from seqlogo.core import pfm2pwm, Pwm
 from seqlogo.seqlogo import *
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'

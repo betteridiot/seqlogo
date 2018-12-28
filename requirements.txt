@@ -30,6 +30,7 @@ ptyprocess=0.6.0=py37_1000
 pygments=2.3.1=py_0
 python=3.7.1=h5001a0f_0
 python-dateutil=2.7.5=py_0
+pytest
 pytz=2018.7=py_0
 readline=7.0=haf1bffa_1
 setuptools=40.6.3=py37_0

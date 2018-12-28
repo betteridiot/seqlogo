@@ -4,7 +4,7 @@ import os
 import sys
 from os import path
 
-__version__ = '0.1.10'
+__version__ = '0.1.11'
 
 def readme():
     this_directory = path.abspath(path.dirname(__file__))
@@ -43,7 +43,8 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
-        'weblogo'
+        'weblogo',
+        'pytest'
     ],
     tests_require=['pytest'],
     cmdclass = {'test' : PyTest},

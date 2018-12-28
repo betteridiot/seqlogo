@@ -2,13 +2,15 @@ from setuptools.command.test import test as TestCommand
 from setuptools import setup
 import os
 import sys
-
-__version__ = '0.1.8'
-
 from os import path
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+
+__version__ = '0.1.10'
+
+def readme():
+    this_directory = path.abspath(path.dirname(__file__))
+    with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+        long_description = f.read()
+    return long_description
 
 
 class PyTest(TestCommand):
@@ -32,7 +34,7 @@ setup(
     name='seqlogo',
     version=__version__,
     description='Python port of the R Bioconductor `seqlogo` package ',
-    long_description=long_description,
+    long_description=readme(),
     long_description_content_type='text/markdown',
     url='https://github.com/betteridiot/seqlogo',
     author='Marcus D. Sherman',
@@ -47,7 +49,7 @@ setup(
     cmdclass = {'test' : PyTest},
     packages=['seqlogo', 'seqlogo.tests'],
     package_dir={'seqlogo': './seqlogo'},
-    package_data={'seqlogo': ['docs/*', 'LICENSE', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md']},
+    package_data={'seqlogo': ['docs/*']},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

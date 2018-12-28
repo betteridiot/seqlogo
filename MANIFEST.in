@@ -1,2 +1,7 @@
 include README.md
 include requirements.txt
+include environment.yml
+include LICENSE
+include CONTRIBUTING.md
+include CODE_OF_CONDUCT.md
+include setup.cfg

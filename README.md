@@ -99,7 +99,15 @@ $ conda env create -f environment.yml
 ---
 #### Installation
 
-To install using pip:
+To install using `conda` (recommended)
+
+```bash
+
+$ conda install -c bioconda seqlogo
+
+```
+
+To install using `pip`:
 
 ```bash
 
@@ -123,7 +131,7 @@ $ git install git+https://github.com/betteridiot/seqlogo.git#egg=seqlogo
 
 import numpy as np
 import pandas as pd
-import seqlogo # mind the capital 'L'
+import seqlogo
 
 ```
 

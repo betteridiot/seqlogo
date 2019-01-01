@@ -23,8 +23,9 @@ in your sequence. Any comment lines that start with `#` will be skipped.
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\large&space;\mathit{PWM}_{m,n}&space;=&space;\begin{pmatrix}&space;a_{1,1}&space;&&space;a_{1,2}&space;&&space;\cdots&space;&&space;a_{1,n}&space;\\&space;a_{2,1}&space;&&space;a_{2,2}&space;&&space;\cdots&space;&&space;a_{2,n}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots&space;\\&space;a_{m,1}&space;&&space;a_{m,2}&space;&&space;\cdots&space;&&space;a_{m,n}&space;\end{pmatrix}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\large&space;\mathit{PWM}_{m,n}&space;=&space;\begin{pmatrix}&space;a_{1,1}&space;&&space;a_{1,2}&space;&&space;\cdots&space;&&space;a_{1,n}&space;\\&space;a_{2,1}&space;&&space;a_{2,2}&space;&&space;\cdots&space;&&space;a_{2,n}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots&space;\\&space;a_{m,1}&space;&&space;a_{m,2}&space;&&space;\cdots&space;&&space;a_{m,n}&space;\end{pmatrix}" title="\large \mathit{PWM}_{m,n} = \begin{pmatrix} a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\ a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m,1} & a_{m,2} & \cdots & a_{m,n} \end{pmatrix}" /></a>
 
-Each item within the PWM is the probability of that given letter being seen at that
-given position. This is often generated in a frequentist fashion. If a pipeline
+Where <a href="https://www.codecogs.com/eqnedit.php?latex=\large&space;a_{m,n}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\large&space;a_{m,n}" title="\large a_{m,n}" /></a> is the probability that at <a href="https://www.codecogs.com/eqnedit.php?latex=\large&space;m" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\large&space;m" title="\large m" /></a> position, <a href="https://www.codecogs.com/eqnedit.php?latex=\large&space;n" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\large&space;n" title="\large n" /></a> letter is seen.
+
+This is often generated in a frequentist fashion. If a pipeline
 tallies all observed letters at each position, this is called a Position Frequency Matrix (PFM).
 
 ---

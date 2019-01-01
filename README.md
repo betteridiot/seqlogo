@@ -1,5 +1,6 @@
 
 [![PyPI version](https://badge.fury.io/py/seqlogo.svg)](https://pypi.org/project/seqlogo/)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/seqlogo/README.html)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/betteridiot/seqlogo/blob/master/LICENSE)
 </br>
 

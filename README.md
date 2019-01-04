@@ -120,7 +120,7 @@ Or install from GitHub directly
 
 ```bash
 
-$ git install git+https://github.com/betteridiot/seqlogo.git#egg=seqlogo
+$ pip install git+https://github.com/betteridiot/seqlogo.git#egg=seqlogo
 
 ```
 

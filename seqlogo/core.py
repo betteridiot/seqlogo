@@ -289,7 +289,7 @@ class Pwm:
 
     @property
     def alphabet(self):
-        return self._alphabet
+        return utils._IDX_LETTERS[self._alphabet]
 
     @property
     def entropy(self):

@@ -42,12 +42,12 @@ def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
         **kwargs: all additional keyword arguments found at http://weblogo.threeplusone.com/manual.html 
     """
     # Ensure color scheme matches the alphabet
-    if pwm.alphabet in utils.NA_ALPHABETS:
+    if pwm._alphabet in utils.NA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'classic'
         if color_scheme not in utils.NA_COLORSCHEMES:
             raise ValueError('{} color_scheme selected is not an allowed nucleic acid color scheme'.format(color_scheme))
-    elif pwm.alphabet in utils.AA_ALPHABETS:
+    elif pwm._alphabet in utils.AA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'hydrophobicity'
         if color_scheme not in utils.AA_COLORSCHEMES:

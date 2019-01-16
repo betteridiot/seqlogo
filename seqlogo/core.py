@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import seqlogo_utils as utils
+import seqlogo as utils
 from functools import singledispatch, partial
 from numbers import Real
 from collections.abc import Collection

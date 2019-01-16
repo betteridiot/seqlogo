@@ -4,7 +4,7 @@ import os
 import sys
 from os import path
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 def readme():
     this_directory = path.abspath(path.dirname(__file__))

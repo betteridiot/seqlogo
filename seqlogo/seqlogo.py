@@ -12,11 +12,15 @@ _sizes = {
 }
 
 
-def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
+def seqlogo(pm, ic_scale = True, color_scheme = None, size = 'medium',
             format = 'svg', filename = None, **kwargs):
-    """The plotting method of the `seqlogo` distribution.
+    """The plotting method of the `seqlogo` distribution. Depends on using
+    any of the 3 classes exposed by `seqlogo`:
+        * `seqlogo.Ppm`
+        * `seqlogo.Pwm`
+        * `seqlogo.CompletePm`
 
-    Given an `M x N` PWM matrix, where `M` is the number of positions and `N`
+    Given an `M x N` PM matrix, where `M` is the number of positions and `N`
     is the number of letters, calculate and render a WebLogo-like motif plot.
 
     When `ic_scale` is `True`, the height of each column is proportional to 
@@ -25,7 +29,7 @@ def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
     reflect "bits"
 
     Args:
-        pwm (`seqlogo.Pwm`): a pre-formatted PWM instance
+        pm (`seqlogo.Pm` subclass): a pre-formatted Pm instance
         ic_scale (bool): whether or not to scale the column heights (default: True)
         size (str): small (3.54 in), medium (5 in), large (7.25 in), xlarge (10.25) (default: 'medium')
         format (str): desired matplotlib supported output format Options are 'eps', 'pdf', 'png', 'jpeg', and 'svg' (default: "svg")
@@ -42,12 +46,12 @@ def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
         **kwargs: all additional keyword arguments found at http://weblogo.threeplusone.com/manual.html 
     """
     # Ensure color scheme matches the alphabet
-    if pwm._alphabet in utils.NA_ALPHABETS:
+    if pm._alphabet_type in utils._NA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'classic'
         if color_scheme not in utils.NA_COLORSCHEMES:
             raise ValueError('{} color_scheme selected is not an allowed nucleic acid color scheme'.format(color_scheme))
-    elif pwm._alphabet in utils.AA_ALPHABETS:
+    elif pm._alphabet_type in utils._AA_ALPHABETS:
         if color_scheme is None:
             color_scheme = 'hydrophobicity'
         if color_scheme not in utils.AA_COLORSCHEMES:
@@ -59,7 +63,7 @@ def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
     out_format = wl.formatters[format]
 
     # Prepare the logo size
-    stack_width = (_sizes[size]/pwm.length) * 72
+    stack_width = (_sizes[size]/pm.length) * 72
 
     # Initialize the options
     if ic_scale:
@@ -70,9 +74,9 @@ def seqlogo(pwm, ic_scale = True, color_scheme = None, size = 'medium',
                             show_fineprint = False, stack_width = stack_width, **kwargs)
 
     #Initialize the output format
-    logo_format = wl.LogoFormat(pwm, options)
+    logo_format = wl.LogoFormat(pm, options)
 
-    out = out_format(pwm, logo_format)
+    out = out_format(pm, logo_format)
 
     # Create the file if the user supplied an filename
     if filename:

@@ -527,6 +527,7 @@ def _(pm_matrix):
     return pm_matrix
 
 
+
 @_submit_pm.register
 def _(pm_matrix: str) -> pd.DataFrame:
     if not os.path.isfile(pm_matrix):
@@ -602,7 +603,7 @@ def pwm2ppm(pwm, background = None, pseudocount = None):
     else:
         pseudocount = 1e-10
     return _init_pm(np.power(2, pwm + np.log2(background)) - pseudocount, pm_type = 'ppm')
-        
+
 
 def ppm2pwm(ppm, background= None, pseudocount = None):
     """Converts a Ppm to a pwm array

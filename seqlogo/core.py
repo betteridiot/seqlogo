@@ -679,7 +679,7 @@ def pwm2pfm(pwm, background = None, pseudocount = None):
     return _init_pm(ppm2pfm(pwm2ppm(pwm, background, pseudocount)), pm_type = 'pfm')
 
 
-class CompletePM(Pm):
+class CompletePm(Pm):
     """Final class of the seqlogo package.
     
     If the user supplies *any* PM structure (PFM, PPM, PWM), it will compute any missing values, to

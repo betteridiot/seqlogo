@@ -111,14 +111,6 @@ $ conda env create -f environment.yml
 ---
 #### Installation
 
-To install using `conda` (recommended)
-
-```bash
-
-$ conda install -c bioconda seqlogo
-
-```
-
 To install using `pip`:
 
 ```bash
@@ -126,6 +118,16 @@ To install using `pip`:
 $ pip install seqlogo
 
 ```
+
+To install using `conda`
+
+```bash
+
+$ conda install -c bioconda seqlogo
+
+```
+
+
 Or install from GitHub directly
 
 ```bash

@@ -4,7 +4,7 @@ import os
 import sys
 from os import path
 
-__version__ = '5.2.0'
+__version__ = '5.2.9'
 
 def readme():
     this_directory = path.abspath(path.dirname(__file__))
@@ -61,7 +61,6 @@ setup(
         'Natural Language :: English',
         'Operating System :: Unix',
         'Operating System :: MacOS',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

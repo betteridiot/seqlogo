@@ -3,7 +3,6 @@ import pandas as pd
 from seqlogo import utils
 from functools import singledispatch, partial
 from numbers import Real
-from collections.abc import Collection
 
 
 # Check to see if currently within an IPython console
@@ -515,9 +514,9 @@ class Pwm(Pm):
 def _submit_pm(pm_matrix):
     raise TypeError('pm_filename_or_array` must be a filename, `np.ndarray`, `pd.DataFrame`, or `Pm`')
 
-
-@_submit_pm.register
-def _(pm_matrix: np.ndarray) -> pd.DataFrame:
+@_submit_pm.register(np.array)
+@_submit_pm.register(np.ndarray)
+def _(pm_matrix):
     return pd.DataFrame(data = pm_matrix)
 
 
@@ -544,7 +543,7 @@ def _check_background(pm, background = None, alphabet_type = "DNA", alphabet = N
     # If the user supplied the background
     if background is not None:
         if not isinstance(background, Real):
-            if not isinstance(background, Collection):
+            if not len(background) == pm.shape[1]:
                 raise ValueError("background must be an iterable with length of alphabet with each letter's respective respective background probability or constant")
             else:
                 return background
@@ -867,3 +866,5 @@ class CompletePm(Pm):
     @property
     def _get_pm(self):
         return getattr(self, "_{}".format(self._default_pm))
+
+Cpm = CompletePm

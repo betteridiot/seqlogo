@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import seqlogo as sl
 from seqlogo import utils
 from functools import singledispatch, partial
 from numbers import Real
@@ -68,7 +69,7 @@ def _init_pm(pm_matrix, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None)
         pm.columns = list(alphabet)
 
     if pm_type == 'ppm':
-        if not np.allclose(pm.sum(axis=1), 1, 1e-10):
+        if not np.allclose(pm.sum(axis=1), 1, 1e-9):
             raise ValueError('All or some PPM columns do not add to 1')
 
     return pm
@@ -514,13 +515,13 @@ class Pwm(Pm):
 def _submit_pm(pm_matrix):
     raise TypeError('pm_filename_or_array` must be a filename, `np.ndarray`, `pd.DataFrame`, or `Pm`')
 
-@_submit_pm.register(np.array)
 @_submit_pm.register(np.ndarray)
 def _(pm_matrix):
     return pd.DataFrame(data = pm_matrix)
 
 
-@_submit_pm.register(Pm)
+@_submit_pm.register(sl.Pm)
+@_submit_pm.register(sl.Pfm)
 @_submit_pm.register(pd.DataFrame)
 def _(pm_matrix): 
     return pm_matrix
@@ -802,7 +803,7 @@ class CompletePm(Pm):
             self._ppm = pfm2ppm(self._pfm)
 
         if pfm is not None and pwm is None:
-            self._pwm = pfm2pwm(self._pfm, background, pseudocount)
+            self._pwm = ppm2pwm(self._ppm, background, pseudocount)
 
         if ppm  is not None and pfm is None:
             self._pfm = ppm2pfm(self._ppm)
@@ -810,11 +811,11 @@ class CompletePm(Pm):
         if ppm is not None and pwm is None:
             self._pwm = ppm2pwm(self._ppm, background, pseudocount)
 
-        if pwm  is not None and pfm is None:
-            self._pfm = pwm2pfm(self._pwm, background, pseudocount)
-
         if pwm  is not None and ppm is None:
             self._ppm = pwm2ppm(self._pwm, background, pseudocount)
+            
+        if pwm  is not None and pfm is None:
+            self._pfm = ppm2pfm(self._ppm)
 
         self._width = self._get_width(self._get_pm)
         if not isinstance(self.pseudocount, Real):
@@ -828,7 +829,6 @@ class CompletePm(Pm):
         self._consensus = self._generate_consensus(self._get_pm)
         self.background = _check_background(self)
         self._ic = (self.ppm * self.pwm).sum(axis=1)
-        (pwm2ppm(self.pwm, background = self.background, pseudocount = self.pseudocount) * self.pwm).sum(axis = 1)
 
     @property
     def counts(self):

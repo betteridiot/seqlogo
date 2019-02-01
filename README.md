@@ -111,7 +111,7 @@ $ conda env create -f environment.yml
 ---
 #### Installation
 
-To install using `pip`:
+To install using `pip`: (recommended)
 
 ```bash
 

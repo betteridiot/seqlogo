@@ -4,7 +4,7 @@ import os
 import sys
 from os import path
 
-__version__ = '5.2.9001'
+__version__ = '5.29.001'
 
 def readme():
     this_directory = path.abspath(path.dirname(__file__))
@@ -44,8 +44,8 @@ setup(
         'numpy',
         'pandas',
         'weblogo',
-        'pytest',
-        'ghostscript'
+        'ghostscript',
+        'pytest'
     ],
     tests_require=['pytest'],
     cmdclass = {'test' : PyTest},

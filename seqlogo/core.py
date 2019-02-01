@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import seqlogo as sl
 from seqlogo import utils
 from functools import singledispatch, partial
 from numbers import Real
@@ -164,7 +163,7 @@ class Pm:
         self._counts = self._weight = self._ic = None
         self._alphabet_type = alphabet_type
         self._alphabet = alphabet
-        self._pm_type = "cpm"
+        self._pm_type = pm_type
         if pseudocount is None:
             self.pseudocount = 1e-10
         else:
@@ -515,17 +514,17 @@ class Pwm(Pm):
 def _submit_pm(pm_matrix):
     raise TypeError('pm_filename_or_array` must be a filename, `np.ndarray`, `pd.DataFrame`, or `Pm`')
 
+
 @_submit_pm.register(np.ndarray)
 def _(pm_matrix):
     return pd.DataFrame(data = pm_matrix)
 
 
-@_submit_pm.register(sl.Pm)
-@_submit_pm.register(sl.Pfm)
+@_submit_pm.register(Pm)
+@_submit_pm.register(Pfm)
 @_submit_pm.register(pd.DataFrame)
 def _(pm_matrix): 
     return pm_matrix
-
 
 
 @_submit_pm.register

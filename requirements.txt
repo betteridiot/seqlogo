@@ -1,11 +1,7 @@
-# This file may be used to create an environment using:
-# $ conda create --name <env> --file <this file>
-# platform: linux-64
-python
-pytest
-numpy
-pandas
-ghostscipt
-weblogo
-setuptools
-
+ghostscript>=0.6
+numpy>=1.16.1
+pandas>=0.24.0
+pytest>=4.2.0
+pytz==2018.9
+seqlogo==5.29.1
+weblogo==3.6.0

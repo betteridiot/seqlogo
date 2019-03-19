@@ -4,7 +4,6 @@ from seqlogo import utils
 from functools import singledispatch, partial
 from numbers import Real
 
-
 # Check to see if currently within an IPython console
 try:
     if get_ipython():
@@ -12,7 +11,6 @@ try:
         ipy = True
 except NameError:
     ipy = False
-    
 
 def _init_pm(pm_matrix, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None):
     """Checks for the file (if filename is supplied) and reads it in if present.
@@ -60,6 +58,7 @@ def _init_pm(pm_matrix, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None)
             if pm.shape[0] == ex_alph_len:
                 pm = pm.transpose()
             else:
+                print(pm.shape)
                 raise ValueError('{} alphabet selected, but PM is not {} rows long'.format(alphabet, ex_alph_len))
 
     if alphabet_type != 'custom':
@@ -72,7 +71,6 @@ def _init_pm(pm_matrix, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None)
             raise ValueError('All or some PPM columns do not add to 1')
 
     return pm
-
 
 @partial(np.vectorize, otypes = [np.float64])
 def __proportion(prob):
@@ -88,7 +86,6 @@ def __proportion(prob):
     else:
         return 0
 
-
 def _row_wise_ic(row):
     """Get the information content for each row across all letters
 
@@ -99,7 +96,6 @@ def _row_wise_ic(row):
         The information content for the row
     """
     return 2 + np.sum(__proportion(row), axis = 1)
-
 
 class Pm:
     """Main class for handling Position Matrices (PM).
@@ -123,10 +119,10 @@ class Pm:
         pseudocount: some number to offset PPM values at to prevent -inf/+inf (default: 1e-10)
         background (Collection): must be an iterable with length of alphabet with each letter's respective respective background probability or constant. (default: for NA-0.25, for AA-Robinson-Robinson Frequencies)
     """
-    
+
     __all__ = ['pm', 'consensus', 'ic', 'width', 'counts', 'entropy'
                'alphabet', 'alphabet_type', 'length', 'weight']
-    
+
     def __init__(self, pm_filename_or_array = None, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None, 
                  background = None, pseudocount = None):
         """Initializes the Pm
@@ -157,7 +153,7 @@ class Pm:
                 using an Nucleic Acid alphabet: 0.25; if using an Aminio Acid alphabet: Robinson-Robinson Frequencies)
             pseudocount (constant): Some constant to offset PPM conversion to PWM to prevent -/+ inf. (default: 1e-10)
         """
-        
+
         self._pm = self._pfm = self._ppm = self._pwm = None
         self._weight = self._width = self._consensus = None
         self._counts = self._weight = self._ic = None
@@ -172,42 +168,50 @@ class Pm:
             self.background = None
         else:
             self.background = background
-        
+
         if pm_filename_or_array is not None:
             self._update_pm(pm_filename_or_array, pm_type, alphabet_type, alphabet, self.background, self.pseudocount)
-        
+
     def _update_pm(self, pm, pm_type ='ppm', alphabet_type = 'DNA', alphabet = None, background = None, pseudocount = None):
         if alphabet_type is None:
             alphabet_type = self.alphabet_type
+
+        # TODO: Check for non-standard alphabets and convert
+        if len(alphabet_type.split()) > 1:
+            sub_class, family = alphabet_type.split()
+            pm, self._weight = utils.convert_pm(pm, pm_type, alphabet_type, background, pseudocount)
+            alphabet_type = family
+            self._alphabet_type = alphabet_type
+            self._alphabet = alphabet
+            alphabet = utils._IDX_LETTERS[family]
+
         setattr(self, "_{}".format(self._pm_type), _init_pm(pm, pm_type, alphabet_type, alphabet))
         self._width = self._get_width(self._get_pm)
         if not isinstance(self.pseudocount, Real):
             if len(self.pseudocount) != self.width:
                 raise ValueError('pseudocount must be the same length as sequence or a constant')
-        if self._alphabet_type not in ("DNA", "RNA", "AA"):
-            self._weight = self._get_pm[:,:-1].sum(axis=1)/self._get_pm.sum(axis=1)
-        else:
+        if self._weight is None:
             self._weight = np.ones((self.width,), dtype=np.int8)
         self._consensus = self._generate_consensus(self._get_pm)
-        self.background = _check_background(self)
+        self.background = _check_background(self, alphabet_type = alphabet_type, alphabet= alphabet)
         if pm_type not in ('pm', 'pfm'):
             if pm_type == 'ppm':
                 self._ic = (self.ppm * ppm2pwm(self.ppm, background = self.background, pseudocount = self.pseudocount)).sum(axis = 1)
             elif pm_type == 'pwm':
                 self._ic = (pwm2ppm(self.pwm, background = self.background, pseudocount = self.pseudocount) * self.pwm).sum(axis = 1)
-        
+
     @property
     def pseudocount(self):
         return self._pseudocount
-    
+
     @pseudocount.setter
     def pseudocount(self, pseudocount):
         self._pseudocount = pseudocount
-    
+
     @property
     def _get_pm(self):
         return getattr(self, "_{}".format(self._pm_type))
-    
+
     def __len__(self):
         return self._get_pm.shape[0]
 
@@ -224,66 +228,66 @@ class Pm:
             return ''
         else:
             return self._get_pm.__repr__()
-    
+
     def sum(self, axis = None):
         return np.sum(self._get_pm, axis = axis)
-    
+
     def __add__(self, other):
         return self._get_pm + other
-    
+
     def __radd__(self, other):
         return other + self._get_pm
-    
+
     def __sub__(self, other):
         return self._get_pm - other
-    
+
     def _rsub_(self, other):
         return other - self._get_pm
-    
+
     def __mul__(self, other):
         return self._get_pm * other
-    
+
     def __rmul__(self, other):
         return other * self._get_pm
-    
+
     def __truediv__(self, other):
         return self._get_pm / other
-    
+
     def __rtruediv__(self, other):
         return other / self._get_pm
-    
+
     def __floordiv__(self, other):
         return self._get_pm // other
-    
+
     def __rfloordiv__(self, other):
         return other // self._get_pm
-    
+
     def __divmod__(self, other):
         return np.divmod(self._get_pm, other)
-    
+
     def __rdivmod__(self, other):
         return np.divmod(other, self._get_pm)
-    
+
     def __mod__(self, other):
         return self._get_pm % other
-    
+
     def __rmod__(self, other):
         return other % self._get_pm
-    
+
     def __pow__(self, other):
         return self._get_pm ** other
-    
+
     def __rpow__(self, other):
         return other ** self._get_pm
-    
+
     @property
     def shape(self):
         return self._get_pm.shape
-    
+
     @property
     def T(self):
         return self._get_pm.T
-    
+
     @property
     def weight(self):
         return self._weight
@@ -341,7 +345,7 @@ class Pm:
     @property
     def width(self):
         return self._width
-    
+
     @property
     def alphabet_type(self):
         return self._alphabet_type
@@ -363,23 +367,22 @@ class Pm:
     @property
     def length(self):
         return self.width
-    
+
     @property
     def pm(self):
         return self._get_pm
-    
+
     @pm.setter
     def pm(self, pm_filename_or_array, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None):
         self._update_pm(pm_filename_or_array, pm_type, alphabet_type, alphabet)
-    
+
     @property
     def background(self):
         return self._background
-    
+
     @background.setter
     def background(self, background):
         self._background = background
-
 
 class Ppm(Pm):
     """Main class for handling Position Probability Matrices (PPM).
@@ -406,7 +409,7 @@ class Ppm(Pm):
         pseudocount: some number to offset PPM values at to prevent -inf/+inf (default: 1e-10)
         background (Collection): must be an iterable with length of alphabet with each letter's respective respective background probability or constant. (default: for NA-0.25, for AA-Robinson-Robinson Frequencies)
     """
-    
+
     __all__ =  ['ppm', 'consensus', 'ic', 'width', 'counts', 'background',
                'alphabet', 'alphabet_type', 'length', 'weight', 'pseudocount']
 
@@ -417,15 +420,14 @@ class Ppm(Pm):
     def __dir__(cls):
         """Just used to clean up the attributes and methods shown when `dir()` is called"""
         return sorted(cls.__all__)
-    
+
     @property
     def ppm(self):
         return self._get_pm
-    
+
     @ppm.setter
     def ppm(self, ppm_filename_or_array, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None):
         super()._update_pm(ppm_filename_or_array, pm_type, alphabet_type, alphabet)
-        
 
 class Pfm(Pm):
     """Main class for handling Position Frequency Matrices (PFM).
@@ -445,7 +447,7 @@ class Pfm(Pm):
                 alphabet type allows gaps, will base weights on gap average in that position
         counts (`pandas.DataFrame`): Synonym for pfm
     """
-    
+
     __all__ =  ['pfm', 'consensus', 'width', 'counts', 'alphabet', 'alphabet_type', 'length', 'weight', 'background']
 
     def __init__(self, *args, **kwargs):
@@ -455,15 +457,14 @@ class Pfm(Pm):
     def __dir__(cls):
         """Just used to clean up the attributes and methods shown when `dir()` is called"""
         return sorted(cls.__all__)
-    
+
     @property
     def pfm(self):
         return self._get_pm
-    
+
     @pfm.setter
     def pfm(self, pfm_filename_or_array, pm_type = 'pfm', alphabet_type = 'DNA', alphabet = None):
         super()._update_pm(pfm_filename_or_array, pm_type, alphabet_type, alphabet)
-        
 
 class Pwm(Pm):
     """Main class for handling Position Weight Matrices (PWM).
@@ -489,7 +490,7 @@ class Pwm(Pm):
         pseudocount: some number to offset PPM values at to prevent -inf/+inf (default: 1e-10)
         background (Collection): must be an iterable with length of alphabet with each letter's respective respective background probability or constant. (default: for NA-0.25, for AA-Robinson-Robinson Frequencies)
     """
-    
+
     __all__ =  ['pwm', 'consensus', 'ic', 'width', 'counts', 'background',
                'alphabet', 'alphabet_type', 'length', 'weight', 'pseudocount']
 
@@ -500,32 +501,28 @@ class Pwm(Pm):
     def __dir__(cls):
         """Just used to clean up the attributes and methods shown when `dir()` is called"""
         return sorted(cls.__all__)
-    
+
     @property
     def pwm(self):
         return self._get_pm
-    
+
     @pwm.setter
     def pwm(self, pwm_filename_or_array, pm_type = 'pwm', alphabet_type = 'DNA', alphabet = None):
         super()._update_pm(pwm_filename_or_array, pm_type, alphabet_type, alphabet)
-        
 
 @singledispatch
 def _submit_pm(pm_matrix):
     raise TypeError('pm_filename_or_array` must be a filename, `np.ndarray`, `pd.DataFrame`, or `Pm`')
 
-
 @_submit_pm.register(np.ndarray)
 def _(pm_matrix):
     return pd.DataFrame(data = pm_matrix)
-
 
 @_submit_pm.register(Pm)
 @_submit_pm.register(Pfm)
 @_submit_pm.register(pd.DataFrame)
 def _(pm_matrix): 
     return pm_matrix
-
 
 @_submit_pm.register
 def _(pm_matrix: str) -> pd.DataFrame:
@@ -536,20 +533,19 @@ def _(pm_matrix: str) -> pd.DataFrame:
 
     return pd.read_table(pm_matrix, delim_whitespace = True, header = None, comment = '#')
 
-
 def _check_background(pm, background = None, alphabet_type = "DNA", alphabet = None):
     """Just used to make sure background frequencies are acceptable or present"""
-    
+
     # If the user supplied the background
     if background is not None:
         if not isinstance(background, Real):
             if not len(background) == pm.shape[1]:
-                raise ValueError("background must be an iterable with length of alphabet with each letter's respective respective background probability or constant")
+                raise ValueError("background must be an iterable with length of alphabet with each letter's respective background probability or constant")
             else:
                 return background
         else:
              return background
-    
+
     # Attempt to figure out the background data from existing information
     else:
         try:
@@ -580,8 +576,7 @@ def _check_background(pm, background = None, alphabet_type = "DNA", alphabet = N
         assert len(alph) == len(background), 'Background must be of equal length of sequence or a constant'
     return np.array(list(background.values()))
 
-
-def pwm2ppm(pwm, background = None, pseudocount = None):
+def pwm2ppm(pwm, background = None, pseudocount = None, alphabet_type = 'DNA', alphabet = None):
     """Converts a Pwm to a ppm array
 
     Args:
@@ -595,16 +590,15 @@ def pwm2ppm(pwm, background = None, pseudocount = None):
     Raises:
         ValueError: if the pseudocount isn't a constant or the same length as sequence
     """
-    background = _check_background(pwm, background)
+    background = _check_background(pwm, background, alphabet_type, alphabet)
     if pseudocount is not None:
         if not isinstance(pseudocount, Real) and len(pseudocount) != pwm.length:
             raise ValueError('pseudocount must be the same length as the sequence or a constant')
     else:
         pseudocount = 1e-10
-    return _init_pm(np.power(2, pwm + np.log2(background)) - pseudocount, pm_type = 'ppm')
+    return _init_pm(np.power(2, pwm + np.log2(background)) - pseudocount, pm_type = 'ppm', alphabet_type = alphabet_type, alphabet = alphabet)
 
-
-def ppm2pwm(ppm, background= None, pseudocount = None):
+def ppm2pwm(ppm, background= None, pseudocount = None, alphabet_type = 'DNA', alphabet = None):
     """Converts a Ppm to a pwm array
 
     Args:
@@ -618,16 +612,15 @@ def ppm2pwm(ppm, background= None, pseudocount = None):
     Raises:
         ValueError: if the pseudocount isn't a constant or the same length as sequence
     """
-    background = _check_background(ppm, background)
+    background = _check_background(ppm, background, alphabet_type, alphabet)
     if pseudocount is not None:
         if not isinstance(pseudocount, Real) and len(pseudocount) != ppm.length:
             raise ValueError('pseudocount must be the same length as the sequence or a constant')
     else:
         pseudocount = 1e-10
-    return _init_pm(np.log2(ppm +  pseudocount) - np.log2(background), pm_type = 'pwm')
+    return _init_pm(np.log2(ppm +  pseudocount) - np.log2(background), pm_type = 'pwm', alphabet_type = alphabet_type, alphabet = alphabet)
 
-
-def ppm2pfm(ppm):
+def ppm2pfm(ppm, alphabet_type = 'DNA', alphabet = None):
     """Converts a Ppm to a pfm array
 
     Args:
@@ -636,10 +629,9 @@ def ppm2pfm(ppm):
     Returns:
         (np.array): converted values
     """
-    return _init_pm((ppm * 100).astype(np.int64), pm_type = 'pfm')
+    return _init_pm((ppm * 100).astype(np.float32), pm_type = 'pfm', alphabet_type = alphabet_type, alphabet = alphabet)
 
-
-def pfm2ppm(pfm):
+def pfm2ppm(pfm, alphabet_type = 'DNA', alphabet = None):
     """Converts a Pfm to a ppm array
 
     Args:
@@ -648,10 +640,9 @@ def pfm2ppm(pfm):
     Returns:
         (np.array): converted values
     """
-    return _init_pm((pfm.T / pfm.sum(axis = 1)).T, pm_type = 'ppm')
+    return _init_pm((pfm.T / pfm.sum(axis = 1)).T, pm_type = 'ppm', alphabet_type = alphabet_type, alphabet = alphabet)
 
-
-def pfm2pwm(pfm, background = None, pseudocount = None):
+def pfm2pwm(pfm, background = None, pseudocount = None, alphabet_type = 'DNA', alphabet = None):
     """Converts a Pfm to a pwm array
 
     Args:
@@ -662,10 +653,9 @@ def pfm2pwm(pfm, background = None, pseudocount = None):
     Returns:
         (np.array): converted values
     """
-    return _init_pm(ppm2pwm(pfm2ppm(pfm), background, pseudocount), pm_type = 'pwm')
+    return _init_pm(ppm2pwm(pfm2ppm(pfm), background, pseudocount), pm_type = 'pwm', alphabet_type = alphabet_type, alphabet = alphabet)
 
-
-def pwm2pfm(pwm, background = None, pseudocount = None):
+def pwm2pfm(pwm, background = None, pseudocount = None, alphabet_type = 'DNA', alphabet = None):
     """Converts a Pwm to a pfm array
 
     Args:
@@ -676,12 +666,11 @@ def pwm2pfm(pwm, background = None, pseudocount = None):
     Returns:
         (np.array): converted values
     """
-    return _init_pm(ppm2pfm(pwm2ppm(pwm, background, pseudocount)), pm_type = 'pfm')
-
+    return _init_pm(ppm2pfm(pwm2ppm(pwm, background, pseudocount)), pm_type = 'pfm', alphabet_type = alphabet_type, alphabet = alphabet)
 
 class CompletePm(Pm):
     """Final class of the seqlogo package.
-    
+
     If the user supplies *any* PM structure (PFM, PPM, PWM), it will compute any missing values, to
     include information content, consensus, and weights.
 
@@ -712,10 +701,10 @@ class CompletePm(Pm):
             using an Nucleic Acid alphabet: 0.25; if using an Aminio Acid alphabet: Robinson-Robinson Frequencies)
         pseudocount (constant): Some constant to offset PPM conversion to PWM to prevent -/+ inf. (default: 1e-10)
     """
-    
+
     __all__ = ['pm', 'pfm', 'ppm', 'pwm', 'consensus', 'ic', 'width', 'counts', 
                'alphabet', 'alphabet_type', 'length', 'weight']
-    
+
     def __init__(self, pfm = None, ppm = None, pwm = None, background = None, pseudocount = None,
                  alphabet_type = 'DNA', alphabet = None, default_pm = 'ppm'):
         """Initializes the CompletePm
@@ -774,7 +763,7 @@ class CompletePm(Pm):
 
         if any([pfm is not None, ppm is not None, pwm is not None]):
             self._update_pm(pfm, ppm, pwm, background, pseudocount, alphabet_type, alphabet)
-        
+
     def _update_pm(self, pfm = None, ppm = None, pwm = None, background = None,
              pseudocount = None, alphabet_type = None, alphabet = None):
         if alphabet_type is None:
@@ -799,29 +788,32 @@ class CompletePm(Pm):
 
         # Fill in the blanks
         if pfm is not None and ppm is None:
-            self._ppm = pfm2ppm(self._pfm)
+            self._ppm = pfm2ppm(self._pfm, alphabet_type = alphabet_type, alphabet = alphabet)
 
         if pfm is not None and pwm is None:
-            self._pwm = ppm2pwm(self._ppm, background, pseudocount)
+            self._pwm = ppm2pwm(self._ppm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
 
         if ppm  is not None and pfm is None:
-            self._pfm = ppm2pfm(self._ppm)
+            self._pfm = ppm2pfm(self._ppm, alphabet_type = alphabet_type, alphabet = alphabet)
 
         if ppm is not None and pwm is None:
-            self._pwm = ppm2pwm(self._ppm, background, pseudocount)
+            self._pwm = ppm2pwm(self._ppm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
 
         if pwm  is not None and ppm is None:
-            self._ppm = pwm2ppm(self._pwm, background, pseudocount)
-            
+            self._ppm = pwm2ppm(self._pwm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
+
         if pwm  is not None and pfm is None:
-            self._pfm = ppm2pfm(self._ppm)
+            self._pfm = ppm2pfm(self._ppm, alphabet_type = alphabet_type, alphabet = alphabet)
 
         self._width = self._get_width(self._get_pm)
         if not isinstance(self.pseudocount, Real):
             if len(self.pseudocount) != self.width:
                 raise ValueError('pseudocount must be the same length as sequence or a constant')
         if self._alphabet_type not in ("DNA", "RNA", "AA"):
-            self._weight = self._get_pm[:,:-1].sum(axis=1)/self._get_pm.sum(axis=1)
+            if 'NA' in self._alphabet_type:
+                self._weight = self._get_pm.iloc[:,:-2].sum(axis=1)/self._get_pm.sum(axis=1)
+            else:
+                self._weight = self._get_pm.iloc[:,:-3].sum(axis=1)/self._get_pm.sum(axis=1)
         else:
             self._weight = np.ones((self.width,), dtype=np.int8)
         self._counts = self.pfm
@@ -836,23 +828,23 @@ class CompletePm(Pm):
     @property
     def pfm(self):
         return self._pfm
-    
+
     @pfm.setter
     def pfm(self, pfm_filename_or_array, pm_type = 'pfm', alphabet_type = 'DNA', alphabet = None):
         super()._update_pm(pfm_filename_or_array, pm_type, alphabet_type, alphabet)
-    
+
     @property
     def ppm(self):
         return self._ppm
-    
+
     @ppm.setter
     def ppm(self, ppm_filename_or_array, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None):
         super()._update_pm(ppm_filename_or_array, pm_type, alphabet_type, alphabet)
-        
+
     @property
     def pwm(self):
         return self._pwm
-    
+
     @pwm.setter
     def pwm(self, ppm_filename_or_array, pm_type = 'pwm', alphabet_type = 'DNA', alphabet = None):
         super()._update_pm(pwm_filename_or_array, pm_type, alphabet_type, alphabet)

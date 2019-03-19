@@ -79,7 +79,10 @@ def convert_pm(non_std_pm, pm_type = 'pfm', alphabet_type = 'reduced DNA', backg
     else:
         pm = non_std_pm
     new_pm = pd.DataFrame(non_std_pm[:,:ambig_start].copy(), columns = list(_IDX_LETTERS[alphabet_type][:ambig_start]))
-    weights = pm.iloc[:,:len_alph].sum(axis = 1) / pm.sum(axis = 1)
+    if isinstance(pm, pd.DataFrame):
+        weights = pm.iloc[:,:len_alph].sum(axis = 1) / pm.sum(axis = 1)
+    elif isinstance(pm, np.ndarray):
+        weights = pm[:,:len_alph].sum(axis = 1) / pm.sum(axis = 1)
 
     if 'ambig' in alphabet_type:
         pd_pm = pd.DataFrame(pm, columns = list(_IDX_LETTERS[alphabet_type]))
@@ -96,7 +99,7 @@ def convert_pm(non_std_pm, pm_type = 'pfm', alphabet_type = 'reduced DNA', backg
     # Dealing with reduced sequences
     else:
         # equally distribute the 'N/X/*/-' counts
-        new_pm += pm[len_alph:-1].sum(axis = 1)[:, np.newaxis] / new_pm.shape[1]
+        new_pm += pm[:,len_alph:-1].sum(axis = 1)[:, np.newaxis] / new_pm.shape[1]
 
         # Return in same form as given
         if pm_type == 'pwm':

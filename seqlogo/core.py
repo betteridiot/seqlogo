@@ -629,7 +629,7 @@ def ppm2pfm(ppm, alphabet_type = 'DNA', alphabet = None):
     Returns:
         (np.array): converted values
     """
-    return _init_pm((ppm * 100).astype(np.float32), pm_type = 'pfm', alphabet_type = alphabet_type, alphabet = alphabet)
+    return _init_pm((ppm * 100).astype(np.float64), pm_type = 'pfm', alphabet_type = alphabet_type, alphabet = alphabet)
 
 def pfm2ppm(pfm, alphabet_type = 'DNA', alphabet = None):
     """Converts a Pfm to a ppm array

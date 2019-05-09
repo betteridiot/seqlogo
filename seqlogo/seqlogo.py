@@ -1,6 +1,13 @@
 import numpy as np
 import pandas as pd
-import weblogolib as wl
+
+import pkg_resources
+weblogo_version = pkg_resources.get_distribution('weblogo').version
+if weblogo_version < "3.7":
+    import weblogolib as wl
+else:
+    import weblogo as wl
+    
 from seqlogo import utils
 
 

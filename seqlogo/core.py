@@ -193,7 +193,7 @@ class Pm:
         if self._weight is None:
             self._weight = np.ones((self.width,), dtype=np.int8)
         self._consensus = self._generate_consensus(self._get_pm)
-        self.background = _check_background(self, alphabet_type = alphabet_type, alphabet= alphabet)
+        self.background = _check_background(self, background = background, alphabet_type = alphabet_type, alphabet= alphabet)
         if pm_type not in ('pm', 'pfm'):
             if pm_type == 'ppm':
                 self._ic = (self.ppm * ppm2pwm(self.ppm, background = self.background, pseudocount = self.pseudocount)).sum(axis = 1)

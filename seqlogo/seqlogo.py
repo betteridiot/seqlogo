@@ -3,11 +3,13 @@ import pandas as pd
 
 import pkg_resources
 weblogo_version = pkg_resources.get_distribution('weblogo').version
-if weblogo_version < "3.7":
-    import weblogolib as wl
-else:
+try:
+    if weblogo_version < "3.7":
+        import weblogolib as wl
+    else:
+        import weblogo as wl
+except ModuleNotFoundError:
     import weblogo as wl
-    
 from seqlogo import utils
 
 

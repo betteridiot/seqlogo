@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import tempfile
+import re
 
 import pkg_resources
 weblogo_version = pkg_resources.get_distribution('weblogo').version
@@ -10,6 +12,7 @@ try:
         import weblogo as wl
 except ModuleNotFoundError:
     import weblogo as wl
+    
 from seqlogo import utils
 
 
@@ -89,26 +92,23 @@ def seqlogo(pm, ic_scale = True, color_scheme = None, size = 'medium',
 
     # Create the file if the user supplied an filename
     if filename:
-        out_file = open('{}'.format(filename), 'wb')
-        out_file.write(out)
-        out_file.close()
+        with open('{}'.format(filename), 'wb') as out_file:
+            out_file.write(out)
+    
+    if format == 'svg':
+        svg_hash = hash(out)
+        out = re.sub(rb'("#?glyph.*?)(")', rb'\1 %s\2' % str(svg_hash).encode(), out)
 
     try:
         if get_ipython():
             import IPython.display as ipd
             if format == 'svg':
-                ipd.display(ipd.SVG(out))
+                return ipd.SVG(out)
             elif format in ('png', 'jpeg', 'svg'):
-                ipd.display(ipd.Image(out))
+                return ipd.Image(out)
             else:
                 raise ValueError('{} format not supported for plotting in console'.format(format))
-            if filename:
-                with open(filename, 'wb') as out_file:
-                    out_file.write(out)
     except NameError:
         if filename is None:
             raise ValueError('If not in an IPython/Jupyter console and no filename is given, nothing will be rendered')
-        else:
-            with  open('{}'.format(filename), 'wb') as out_file:
-                out_file.write(out)
-
+    

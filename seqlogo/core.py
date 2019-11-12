@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
-from seqlogo import utils
+from seqlogo import utils, core
 from functools import singledispatch, partial
 from numbers import Real
+
 
 # Check to see if currently within an IPython console
 try:
@@ -47,7 +48,7 @@ def _init_pm(pm_matrix, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None)
         TypeError if `pm_filename_or_array` is not a file or array-like structure
     """
     pm = _submit_pm(pm_matrix)
-
+    
     if alphabet_type != 'custom':
         ex_alph_len = len(utils._IDX_LETTERS[alphabet_type])
     else:
@@ -171,6 +172,7 @@ class Pm:
 
         if pm_filename_or_array is not None:
             self._update_pm(pm_filename_or_array, pm_type, alphabet_type, alphabet, self.background, self.pseudocount)
+            
 
     def _update_pm(self, pm, pm_type ='ppm', alphabet_type = 'DNA', alphabet = None, background = None, pseudocount = None):
         if alphabet_type is None:
@@ -196,9 +198,9 @@ class Pm:
         self.background = _check_background(self, background = background, alphabet_type = alphabet_type, alphabet= alphabet)
         if pm_type not in ('pm', 'pfm'):
             if pm_type == 'ppm':
-                self._ic = (self.ppm * ppm2pwm(self.ppm, background = self.background, pseudocount = self.pseudocount)).sum(axis = 1)
+                self._ic = (self.ppm * ppm2pwm(self.ppm, background = self.background, pseudocount = self.pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)).sum(axis = 1)
             elif pm_type == 'pwm':
-                self._ic = (pwm2ppm(self.pwm, background = self.background, pseudocount = self.pseudocount) * self.pwm).sum(axis = 1)
+                self._ic = (pwm2ppm(self.pwm, background = self.background, pseudocount = self.pseudocount, alphabet_type = alphabet_type, alphabet = alphabet) * self.pwm).sum(axis = 1)
 
     @property
     def pseudocount(self):
@@ -555,7 +557,7 @@ def _check_background(pm, background = None, alphabet_type = "DNA", alphabet = N
                 alph = alphabet
             else:
                 alph = utils._IDX_LETTERS[alphabet_type]
-        if isinstance(pm, Pm):
+        if isinstance(pm, core.Pm):
             if pm.alphabet_type in utils._NA_ALPHABETS:
                 background = utils._NA_background
             elif pm.alphabet_type in utils._AA_ALPHABETS:
@@ -771,17 +773,17 @@ class CompletePm(Pm):
 
         # Set the ones the user has provided
         if pfm is not None:
-            if not isinstance(pfm, Pm):
+            if not isinstance(pfm, core.Pm):
                 self._pfm = _init_pm(pfm, pm_type = 'pfm', alphabet_type = alphabet_type, alphabet = alphabet)
             else:
                 self._pfm = pfm.pfm
         if ppm is not None:
-            if not isinstance(ppm, Pm):
+            if not isinstance(ppm, core.Pm):
                 self._ppm = _init_pm(ppm, pm_type = 'ppm', alphabet_type = alphabet_type, alphabet = alphabet)
             else:
                 self._ppm = ppm.ppm
         if pwm is not None:
-            if not isinstance(pfm, Pm):
+            if not isinstance(pfm, core.Pm):
                 self._pwm = _init_pm(pwm, pm_type = 'pwm', alphabet_type = alphabet_type, alphabet = alphabet)
             else:
                 self._pwm = pwm.pwm

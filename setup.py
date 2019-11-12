@@ -4,7 +4,7 @@ import os
 import sys
 from os import path
 
-__version__ = '5.29.6'
+__version__ = '5.29.7'
 
 def readme():
     this_directory = path.abspath(path.dirname(__file__))
@@ -74,4 +74,3 @@ setup(
     include_package_data=True,
     zip_safe=False
 )
-

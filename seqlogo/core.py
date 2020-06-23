@@ -53,7 +53,7 @@ def _init_pm(pm_matrix, pm_type = 'ppm', alphabet_type = 'DNA', alphabet = None)
         ex_alph_len = len(utils._IDX_LETTERS[alphabet_type])
     else:
         ex_alph_len = len(alphabet)
-
+    
     if not pm.shape[1] == ex_alph_len:
         if alphabet_type in utils._NA_ALPHABETS or alphabet_type in utils._AA_ALPHABETS or alphabet_type == 'custom':
             if pm.shape[0] == ex_alph_len:
@@ -159,6 +159,7 @@ class Pm:
         self._weight = self._width = self._consensus = None
         self._counts = self._weight = self._ic = None
         self._alphabet_type = alphabet_type
+        
         self._alphabet = alphabet
         self._pm_type = pm_type
         if pseudocount is None:
@@ -179,13 +180,15 @@ class Pm:
             alphabet_type = self.alphabet_type
 
         # TODO: Check for non-standard alphabets and convert
-        if len(alphabet_type.split()) > 1:
-            sub_class, family = alphabet_type.split()
-            pm, self._weight = utils.convert_pm(pm, pm_type, alphabet_type, background, pseudocount)
-            alphabet_type = family
-            self._alphabet_type = alphabet_type
-            self._alphabet = alphabet
-            alphabet = utils._IDX_LETTERS[family]
+#         if len(alphabet_type.split()) > 1:
+#             sub_class, family = alphabet_type.split()
+#             pm, self._weight = utils.convert_pm(pm, pm_type, alphabet_type, background, pseudocount)
+#             alphabet_type = family
+#             self._alphabet_type = alphabet_type
+            
+#             self._alphabet = alphabet
+#             alphabet = utils._IDX_LETTERS[family]
+#             alphabet = utils._IDX_LETTERS[self._alphabet_type]
 
         setattr(self, "_{}".format(self._pm_type), _init_pm(pm, pm_type, alphabet_type, alphabet))
         self._width = self._get_width(self._get_pm)
@@ -655,7 +658,21 @@ def pfm2pwm(pfm, background = None, pseudocount = None, alphabet_type = 'DNA', a
     Returns:
         (np.array): converted values
     """
-    return _init_pm(ppm2pwm(pfm2ppm(pfm), background, pseudocount), pm_type = 'pwm', alphabet_type = alphabet_type, alphabet = alphabet)
+    return _init_pm(
+        ppm2pwm(
+            pfm2ppm(
+                pfm,
+                alphabet_type = alphabet_type,
+                alphabet = alphabet
+            ),
+            background, 
+            pseudocount,
+            alphabet_type,
+            alphabet), 
+        pm_type = 'pwm', 
+        alphabet_type = alphabet_type, 
+        alphabet = alphabet
+    )
 
 def pwm2pfm(pwm, background = None, pseudocount = None, alphabet_type = 'DNA', alphabet = None):
     """Converts a Pwm to a pfm array
@@ -766,8 +783,16 @@ class CompletePm(Pm):
         if any([pfm is not None, ppm is not None, pwm is not None]):
             self._update_pm(pfm, ppm, pwm, background, pseudocount, alphabet_type, alphabet)
 
-    def _update_pm(self, pfm = None, ppm = None, pwm = None, background = None,
-             pseudocount = None, alphabet_type = None, alphabet = None):
+    def _update_pm(
+        self, 
+        pfm = None, 
+        ppm = None, 
+        pwm = None, 
+        background = None,   
+        pseudocount = None, 
+        alphabet_type = None, 
+        alphabet = None
+    ):
         if alphabet_type is None:
             alphabet_type = self.alphabet_type
 
@@ -793,18 +818,18 @@ class CompletePm(Pm):
             self._ppm = pfm2ppm(self._pfm, alphabet_type = alphabet_type, alphabet = alphabet)
 
         if pfm is not None and pwm is None:
-            self._pwm = ppm2pwm(self._ppm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
+            self._pwm = pfm2pwm(self._ppm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
 
-        if ppm  is not None and pfm is None:
+        if ppm is not None and pfm is None:
             self._pfm = ppm2pfm(self._ppm, alphabet_type = alphabet_type, alphabet = alphabet)
 
         if ppm is not None and pwm is None:
             self._pwm = ppm2pwm(self._ppm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
 
-        if pwm  is not None and ppm is None:
+        if pwm is not None and ppm is None:
             self._ppm = pwm2ppm(self._pwm, background, pseudocount, alphabet_type = alphabet_type, alphabet = alphabet)
 
-        if pwm  is not None and pfm is None:
+        if pwm is not None and pfm is None:
             self._pfm = ppm2pfm(self._ppm, alphabet_type = alphabet_type, alphabet = alphabet)
 
         self._width = self._get_width(self._get_pm)
@@ -820,7 +845,7 @@ class CompletePm(Pm):
             self._weight = np.ones((self.width,), dtype=np.int8)
         self._counts = self.pfm
         self._consensus = self._generate_consensus(self._get_pm)
-        self.background = _check_background(self)
+        self.background = _check_background(self, background, alphabet_type, alphabet)
         self._ic = (self.ppm * self.pwm).sum(axis=1)
 
     @property

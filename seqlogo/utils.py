@@ -36,7 +36,7 @@ _IDX_LETTERS = {
 }
 
 _NA_ALPHABETS = set((
-    "DNA", "reduced DNA", "ambig DNA"
+    "DNA", "reduced DNA", "ambig DNA",
     "RNA", "reduced RNA", "ambig RNA"
 ))
 

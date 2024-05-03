@@ -1,4 +1,4 @@
-ghostscript>=0.6
+ghostscript>=0.6,<=9.18
 numpy>=1.16.1
 pandas>=0.24.0
 pytest>=4.2.0

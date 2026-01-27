@@ -2,7 +2,7 @@
 
 All notable changes to seqlogo will be documented in this file.
 
-## [5.29.9] - 2026-01-27
+## [5.29.10] - 2026-01-27
 
 ### Changed
 - **BREAKING**: Default format changed from 'svg' to 'png'

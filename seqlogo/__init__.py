@@ -29,7 +29,7 @@ as part of this package.
 
 """
 
-__version__ = '5.29.9'
+__version__ = '5.29.10'
 
 from seqlogo.core import *
 from seqlogo.seqlogo import *

@@ -28,5 +28,10 @@ license.  Please see the LICENSE file that should have been included
 as part of this package.
 
 """
+
+__version__ = '5.29.11'
+
 from seqlogo.core import *
 from seqlogo.seqlogo import *
+
+

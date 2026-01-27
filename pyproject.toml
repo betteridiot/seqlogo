@@ -1,0 +1,77 @@
+# pyproject.toml
+# Build configuration for seqlogo
+# Compatible with Python 3.4+
+
+[build-system]
+# setuptools 40.8.0+ supports pyproject.toml (released 2018, Python 3.4 compatible)
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seqlogo"
+dynamic = ["version"]
+description = "Python port of the R Bioconductor `seqlogo` package"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+authors = [
+    {name = "Marcus D. Sherman", email = "mdsherman@betteridiot.tech"}
+]
+keywords = ["sequence", "logo", "seqlogo", "bioinformatics", "genomics", "weblogo"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: Unix",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Information Analysis"
+]
+requires-python = ">=3.4"
+dependencies = [
+    "numpy",
+    "pandas",
+    "weblogo"
+]
+
+[project.optional-dependencies]
+svg = ["ghostscript"]
+test = ["pytest"]
+dev = ["pytest", "ghostscript"]
+
+[project.urls]
+Homepage = "https://github.com/betteridiot/seqlogo"
+Repository = "https://github.com/betteridiot/seqlogo"
+Documentation = "https://github.com/betteridiot/seqlogo"
+
+[tool.setuptools]
+packages = ["seqlogo", "seqlogo.tests"]
+zip-safe = false
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "seqlogo.__version__"}
+
+[tool.setuptools.package-data]
+seqlogo = ["docs/*"]
+
+[tool.pytest.ini_options]
+addopts = "-Wignore"
+testpaths = ["seqlogo/tests"]
+

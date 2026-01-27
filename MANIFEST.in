@@ -5,3 +5,8 @@ include LICENSE
 include CONTRIBUTING.md
 include CODE_OF_CONDUCT.md
 include setup.cfg
+include pyproject.toml
+recursive-include seqlogo *.py
+recursive-include seqlogo/docs *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

@@ -2,17 +2,46 @@ import numpy as np
 import pandas as pd
 import tempfile
 import re
+import warnings
+import sys
 
-import pkg_resources
-weblogo_version = pkg_resources.get_distribution('weblogo').version
+
+def _get_weblogo_version():
+    if sys.version_info >= (3,8):
+        try:
+            from importlib.metadata import version
+            return version('weblogo')
+        except ImportError:
+            pass
+
+    try:
+        import pkg_resources
+        return pkg_resources.get_distribution('weblogo').version
+    except Exception:
+        pass
+
+    try:
+        import weblogo
+        if hasattr(weblogo, '__version__'):
+            return weblogo.__version__
+    except Exception:
+        pass
+    return "3.7.0"
+
+weblogo_version = _get_weblogo_version()
+
 try:
     if weblogo_version < "3.7":
         import weblogolib as wl
     else:
         import weblogo as wl
-except ModuleNotFoundError:
-    import weblogo as wl
+except (ModuleNotFoundError, ImportError):
+    try:
+        import weblogolib as wl
+    except ImportError:
+        raise ImportError("Neither 'weblogo' or 'weblogolib' could be imported.\nPlease install 'weblogo'")
     
+
 from seqlogo import utils
 
 
@@ -24,8 +53,12 @@ _sizes = {
 }
 
 
+def _check_pdf2svg_available():
+    return shutil.which('pdf2svg') is not None
+
+
 def seqlogo(pm, ic_scale = True, color_scheme = None, size = 'medium',
-            format = 'svg', filename = None, **kwargs):
+            format = 'png', filename = None, **kwargs):
     """The plotting method of the `seqlogo` distribution. Depends on using
     any of the 3 classes exposed by `seqlogo`:
         * `seqlogo.Ppm`
@@ -44,7 +77,15 @@ def seqlogo(pm, ic_scale = True, color_scheme = None, size = 'medium',
         pm (`seqlogo.Pm` subclass): a pre-formatted Pm instance
         ic_scale (bool): whether or not to scale the column heights (default: True)
         size (str): small (3.54 in), medium (5 in), large (7.25 in), xlarge (10.25) (default: 'medium')
-        format (str): desired matplotlib supported output format Options are 'eps', 'pdf', 'png', 'jpeg', and 'svg' (default: "svg")
+        format (str): desired matplotlib supported output format Options are 'eps', 'pdf', 'png', 'jpeg', and 'svg' (default: "png")
+        
+        **Important**L
+            - 'png' is the default and works in Jupyter Notebooks, RMarkdown (via reticulate), and all environments.
+            - 'svg' requires pdf2svg to be install separately. If you want to use 'svg', you just install pdf2svg, and even then, it might not work on some operating systems.
+                - Ubuntu/Debian : apt-get install pdf2svg
+                - macOS: brew install pdf2svg
+                - Windows: Download and install https://github.com/jalios/pdf2svg-windows
+
         filename (None | str): Name of the file to save the figure. If `None`:
             the figure will not be saved. (default: None)
         color_scheme (str): the color scheme to use for weblogo:
@@ -57,6 +98,9 @@ def seqlogo(pm, ic_scale = True, color_scheme = None, size = 'medium',
             'charge': (AA Only) Color based on charge
         **kwargs: all additional keyword arguments found at http://weblogo.threeplusone.com/manual.html 
     """
+    if format == 'svg' and not _check_pdf2svg_available():
+        raise RuntimeError("pdf2svg has not been found. Please install it as per the help() documentation for this function.")
+
     # Ensure color scheme matches the alphabet
     if pm._alphabet_type in utils._NA_ALPHABETS:
         if color_scheme is None:

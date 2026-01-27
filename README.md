@@ -65,11 +65,11 @@ and the rendering power of the [WebLogo](http://weblogo.threeplusone.com/)Python
     | `"ambig AA"` | `"ACDEFGHIKLMNOPQRSTUVWYBJZX*-"` |
     (**Bolded** alphabet names are the most commonly used)
 * `seqlogo` can also render sequence logos in a number of formats:
-    * `"svg"` (default)
+    * `"svg"`
     * `"eps"`
     * `"pdf"`
     * `"jpeg"`
-    * `"png"`
+    * `"png"` (default)
 
 * All plots can be rendered in 4 different sizes:
     * `"small"`: 3.54" wide
@@ -273,7 +273,7 @@ dtype: float64
 # Making a fake PWM
 >>> random_ppm = np.random.dirichlet(np.ones(4), size=6)
 >>> ppm = seqlogo.Ppm(random_ppm)
->>> seqlogo.seqlogo(ppm, ic_scale = False, format = 'svg', size = 'medium')
+>>> seqlogo.seqlogo(ppm, ic_scale = False, format = 'png', size = 'medium')
 
 ```
 
@@ -292,7 +292,7 @@ The above code will produce:
 # Making a fake PWM
 >>> random_ppm = np.random.dirichlet(np.ones(4), size=6)
 >>> ppm = seqlogo.Ppm(random_ppm)
->>> seqlogo.seqlogo(ppm, ic_scale = False, format = 'svg', size = 'medium')
+>>> seqlogo.seqlogo(ppm, ic_scale = False, format = 'png', size = 'medium')
 
 ```
 

@@ -215,7 +215,7 @@ Here is a quickstart guide on how to leverage the power of `seqlogo.CompletePm`
 
 # Making a fake PWM
 >>> random_ppm = np.random.dirichlet(np.ones(4), size=6)
->>> cpm = seqlogo.CompletePM(ppm = random_ppm)
+>>> cpm = seqlogo.CompletePm(ppm = random_ppm)
 
 # Pfm was imputed
 >>> print(cpm.pfm)
@@ -273,7 +273,7 @@ dtype: float64
 # Making a fake PWM
 >>> random_ppm = np.random.dirichlet(np.ones(4), size=6)
 >>> ppm = seqlogo.Ppm(random_ppm)
->>> seqlogo.seqlogo(ppm, ic_scale = False, format = 'png', size = 'medium')
+>>> seqlogo.seqlogo(ppm, ic_scale = True, format = 'png', size = 'medium')
 
 ```
 
